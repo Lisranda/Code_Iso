@@ -5,16 +5,23 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
 	float playerCardinalSpeed = 5f;
-	float playerDiagonalSpeed;
+	float playerRotateSpeed = 3f;
 	bool isMoving = false;
+	public enum Facing {North, East, South, West};
+	public Facing facingDirection = new Facing ();
 
 	void Start () {
-		playerDiagonalSpeed = playerCardinalSpeed / 2;
+		SetInitialFacing ();
 	}
 		
 	void Update () {
-		CardinalMovement ();
-//		DiagonalMovement ();
+//		DrawForwardRay ();
+		MovementInput ();
+	}
+
+	void DrawForwardRay () {
+		Vector3 fwd = transform.TransformDirection (Vector3.forward) * 10;
+		Debug.DrawRay (transform.position, fwd, Color.green);
 	}
 
 	IEnumerator MoveToward (Vector3 target) {
@@ -26,10 +33,30 @@ public class PlayerController : MonoBehaviour {
 		isMoving = false;
 	}
 
-	bool PathClear (float dX, float dY, float dZ) {
-		//This method will determine if the space in front is clear or obstructed (Raycast?)
-		//It will then determine of the tile is walkable (also Raycast?)
-		Vector3 direction = new Vector3 (dX, dY, dZ);
+	IEnumerator RotatePlayer (Vector3 target) {
+		isMoving = true;
+		Quaternion targetRotation = Quaternion.LookRotation (target);
+
+		while (transform.rotation != targetRotation) {
+			transform.rotation = Quaternion.RotateTowards (transform.rotation, targetRotation, playerRotateSpeed);
+			yield return null;
+		}
+
+		isMoving = false;
+	}
+
+	void SetInitialFacing () {
+		if (transform.forward == Vector3.left)
+			facingDirection = Facing.North;
+		if (transform.forward == Vector3.right)
+			facingDirection = Facing.South;
+		if (transform.forward == Vector3.back)
+			facingDirection = Facing.West;
+		if (transform.forward == Vector3.forward)
+			facingDirection = Facing.East;
+	}
+
+	bool PathClear (Vector3 direction) {
 		Vector3 target = transform.position + direction;
 		RaycastHit hit;
 
@@ -48,37 +75,30 @@ public class PlayerController : MonoBehaviour {
 		return true;
 	}
 
-	void CardinalMovement ()
+	void MovementInput ()
 	{
-		if (!isMoving && PathClear (-1f, 0f, 0f) && Input.GetKey ("w") && !Input.GetKey ("s") && !Input.GetKey ("a") && !Input.GetKey ("d")) {
-			Vector3 target = new Vector3 (transform.position.x - 1f, transform.position.y, transform.position.z);
-			StartCoroutine (MoveToward (target));
+		if (!isMoving && Input.GetKey ("w") && !Input.GetKey ("s") && !Input.GetKey ("a") && !Input.GetKey ("d")) {
+			MovePlayer (Facing.North, Vector3.left);
 		}
-		if (!isMoving && PathClear (1f, 0f, 0f) && Input.GetKey ("s") && !Input.GetKey ("w") && !Input.GetKey ("a") && !Input.GetKey ("d")) {
-			Vector3 target = new Vector3 (transform.position.x + 1f, transform.position.y, transform.position.z);
-			StartCoroutine (MoveToward (target));
+		if (!isMoving && Input.GetKey ("s") && !Input.GetKey ("w") && !Input.GetKey ("a") && !Input.GetKey ("d")) {
+			MovePlayer (Facing.South, Vector3.right);
 		}
-		if (!isMoving && PathClear (0f, 0f, -1f) && Input.GetKey ("a") && !Input.GetKey ("d") && !Input.GetKey ("w") && !Input.GetKey ("s")) {
-			Vector3 target = new Vector3 (transform.position.x, transform.position.y, transform.position.z - 1f);
-			StartCoroutine (MoveToward (target));
+		if (!isMoving && Input.GetKey ("a") && !Input.GetKey ("d") && !Input.GetKey ("w") && !Input.GetKey ("s")) {
+			MovePlayer (Facing.West, Vector3.back);
 		}
-		if (!isMoving && PathClear (0f, 0f, 1f) && Input.GetKey ("d") && !Input.GetKey ("a") && !Input.GetKey ("w") && !Input.GetKey ("s")) {
-			Vector3 target = new Vector3 (transform.position.x, transform.position.y, transform.position.z + 1f);
-			StartCoroutine (MoveToward (target));
+		if (!isMoving && Input.GetKey ("d") && !Input.GetKey ("a") && !Input.GetKey ("w") && !Input.GetKey ("s")) {
+			MovePlayer (Facing.East, Vector3.forward);
 		}
 	}
 
-	void DiagonalMovement () {
-		if (Input.GetKey ("w") && Input.GetKey ("a") && !Input.GetKey ("s") && !Input.GetKey ("d")) {
-			transform.Translate (-playerDiagonalSpeed * Time.deltaTime, 0, -playerDiagonalSpeed * Time.deltaTime);
-		}else if (Input.GetKey ("w") && Input.GetKey ("d") && !Input.GetKey ("s") && !Input.GetKey ("a")) {
-			transform.Translate (-playerDiagonalSpeed * Time.deltaTime, 0, playerDiagonalSpeed * Time.deltaTime);
-		}
-
-		if (Input.GetKey ("s") && Input.GetKey ("a") && !Input.GetKey ("w") && !Input.GetKey ("d")) {
-			transform.Translate (playerDiagonalSpeed * Time.deltaTime, 0, -playerDiagonalSpeed * Time.deltaTime);
-		}else if (Input.GetKey ("s") && Input.GetKey ("d") && !Input.GetKey ("w") && !Input.GetKey ("a")) {
-			transform.Translate (playerDiagonalSpeed * Time.deltaTime, 0, playerDiagonalSpeed * Time.deltaTime);
+	void MovePlayer (Facing face, Vector3 direction) {		
+		Vector3 target = transform.position + direction;
+		if (facingDirection == face) {	
+			if (PathClear (direction))
+				StartCoroutine (MoveToward (target));
+		} else {
+			facingDirection = face;
+			StartCoroutine (RotatePlayer (direction));
 		}
 	}
 }
