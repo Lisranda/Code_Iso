@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TileData : MonoBehaviour {
 	public bool isWalkable = true;
+	public bool isOccupied = false;
 
 	public GameObject[] neighbors = new GameObject[4];
 	const int north = 0;

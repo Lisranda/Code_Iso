@@ -9,9 +9,11 @@ public class PlayerController : MonoBehaviour {
 	bool isMoving = false;
 	public enum Facing {North, East, South, West};
 	public Facing facingDirection = new Facing ();
+	public GameObject tileLocation;
 
 	void Start () {
 		SetInitialFacing ();
+		SetInitialPosition ();
 	}
 		
 	void Update () {
@@ -24,12 +26,24 @@ public class PlayerController : MonoBehaviour {
 		Debug.DrawRay (transform.position, fwd, Color.green);
 	}
 
-	IEnumerator MoveToward (Vector3 target) {
+	GameObject FindTileLocation (Vector3 location) {
+		RaycastHit hit;
+
+		if (Physics.Raycast (location, Vector3.down, out hit, 1f)) {
+			return hit.transform.gameObject;
+		}
+		return null;
+	}
+
+	IEnumerator MoveToward (GameObject targetGO) {
+		Vector3 target = new Vector3 (targetGO.transform.position.x, 1.25f, targetGO.transform.position.z);
 		isMoving = true;
 		while (transform.position != target) {
 			transform.position = Vector3.MoveTowards (transform.position, target, playerCardinalSpeed * Time.deltaTime);
 			yield return null;
 		}
+		tileLocation.GetComponent<TileData> ().isOccupied = false;
+		tileLocation = FindTileLocation (transform.position);
 		isMoving = false;
 	}
 
@@ -56,21 +70,29 @@ public class PlayerController : MonoBehaviour {
 			facingDirection = Facing.East;
 	}
 
+	void SetInitialPosition () {
+		tileLocation = FindTileLocation (transform.position);
+		tileLocation.GetComponent<TileData> ().isOccupied = true;
+		transform.position = new Vector3 (tileLocation.transform.position.x, 1.25f, tileLocation.transform.position.z);
+	}
+
 	bool PathClear (Vector3 direction) {
 		Vector3 target = transform.position + direction;
 		RaycastHit hit;
 
-		if (Physics.Raycast (transform.position, direction, 1f)) {
+		if (Physics.Raycast (transform.position, direction, 1f))
 			return false;
-		} else if (!Physics.Raycast (target, Vector3.down, 1f)) {
+		if (!Physics.Raycast (target, Vector3.down, 1f))
 			return false;
-		} else if (Physics.Raycast (target, Vector3.down, out hit, 1f)) {
+
+		if (Physics.Raycast (target, Vector3.down, out hit, 1f)) {
 			GameObject go = hit.transform.gameObject;
 			TileData tileData = go.GetComponent<TileData> ();
 
-			if (!tileData.isWalkable) {
+			if (!tileData.isWalkable)
 				return false;
-			}
+			if (tileData.isOccupied)
+				return false;
 		}
 		return true;
 	}
@@ -93,9 +115,12 @@ public class PlayerController : MonoBehaviour {
 
 	void MovePlayer (Facing face, Vector3 direction) {		
 		Vector3 target = transform.position + direction;
+		GameObject targetGO = FindTileLocation (target);
 		if (facingDirection == face) {	
-			if (PathClear (direction))
-				StartCoroutine (MoveToward (target));
+			if (PathClear (direction)) {
+				targetGO.GetComponent<TileData> ().isOccupied = true;
+				StartCoroutine (MoveToward (targetGO));
+			}				
 		} else {
 			facingDirection = face;
 			StartCoroutine (RotatePlayer (direction));
