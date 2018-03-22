@@ -12,10 +12,24 @@ public class PlayerController : PawnController {
 	void Update () {
 		DrawForwardRay ();
 		MovementInput ();
+		RightClick ();
 	}
 
 	void LateUpdate () {
 		MouseOver ();
+	}
+
+	GameObject RayToTile () {
+		GameObject go;
+		RaycastHit hit;
+		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+		if (Physics.Raycast (ray, out hit, 50, ~(1 << 11))) {
+			go = hit.transform.gameObject;
+			if (go.GetComponent<Tile> () != null) {
+				return go;				
+			}
+		}
+		return null;
 	}
 
 	void MovementInput ()
@@ -31,15 +45,16 @@ public class PlayerController : PawnController {
 	}
 
 	void MouseOver () {
-		GameObject go;
-		RaycastHit hit;
-		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-		if (Physics.Raycast (ray, out hit)) {
-			go = hit.transform.gameObject;
-			if (go.CompareTag ("Floor")) {
-				go.GetComponent<Tile> ().AddHighlight ();				
-			}
+		if (RayToTile () != null) {
+			RayToTile ().GetComponent<Tile> ().AddHighlight ();
 		}
 	}
 
+	void RightClick (){
+		if (Input.GetMouseButtonUp (1)) {
+			if (RayToTile () != null) {
+				tileTarget = RayToTile ();
+			}
+		}
+	}
 }

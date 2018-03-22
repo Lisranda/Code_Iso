@@ -5,9 +5,13 @@ using UnityEngine;
 public class CameraController : MonoBehaviour {
 	GameObject player;
 	Vector3 initialPosition;
+	Quaternion rotation;
+	Vector3 position;
 
 	void Start () {
-		player = GameObject.FindGameObjectWithTag ("Player");
+		rotation = transform.rotation;
+//		player = GameObject.FindGameObjectWithTag ("Player");
+		player = transform.parent.gameObject;
 		transform.position = player.transform.position - 30 * transform.forward;
 	}
 
@@ -16,6 +20,7 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void LateUpdate () {
+		transform.rotation = rotation;
 		transform.position = player.transform.position - 30 * transform.forward;
 	}
 }

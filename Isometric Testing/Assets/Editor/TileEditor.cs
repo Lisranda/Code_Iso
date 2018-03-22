@@ -13,8 +13,8 @@ public class TileEditor : Editor {
 		if(GUILayout.Button("Find Neighbors"))
 		{
 			foreach (Object obj in targets) {
-				Tile tileData = (Tile)obj;
-				tileData.SetNeighbors ();
+				Tile t = (Tile)obj;
+				t.SetNeighbors ();
 			}
 		}
 	}

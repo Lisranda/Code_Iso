@@ -10,6 +10,7 @@ public class PawnController : MonoBehaviour {
 	protected enum Facing {North, East, South, West};
 	[SerializeField] protected Facing facingDirection = new Facing ();
 	[SerializeField] protected GameObject tileLocation;
+	[SerializeField] protected GameObject tileTarget;
 
 	#region UTILITY FUNCTIONS
 
@@ -58,15 +59,15 @@ public class PawnController : MonoBehaviour {
 			return false;
 		if (!Physics.Raycast (target, Vector3.down, 1f))
 			return false;
-
 		if (Physics.Raycast (target, Vector3.down, out hit, 1f)) {
 			GameObject go = hit.transform.gameObject;
-			Tile tileData = go.GetComponent<Tile> ();
-
-			if (!tileData.isWalkable)
-				return false;
-			if (tileData.isOccupied)
-				return false;
+			if (go.GetComponent<Tile> () != null) {
+				Tile tile = go.GetComponent<Tile> ();
+				if (!tile.isWalkable)
+					return false;
+				if (tile.isOccupied)
+					return false;
+			}
 		}
 		return true;
 	}

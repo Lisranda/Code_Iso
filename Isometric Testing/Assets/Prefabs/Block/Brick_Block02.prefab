@@ -22,7 +22,8 @@ GameObject:
   - component: {fileID: 33348347339873048}
   - component: {fileID: 65864153189010908}
   - component: {fileID: 23277670913388480}
-  m_Layer: 9
+  - component: {fileID: 114285846525626992}
+  m_Layer: 11
   m_Name: Brick_Block02
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -95,3 +96,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114285846525626992
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1852200766760554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375db0221662ad84b830df69ecf9b382, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstructsMovement: 1

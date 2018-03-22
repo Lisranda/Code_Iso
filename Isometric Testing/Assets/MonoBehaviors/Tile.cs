@@ -15,15 +15,17 @@ public class Tile : MonoBehaviour {
 	const int west = 3;
 
 	void Start () {
+		CheckObstructed ();
 		SetNeighbors ();
 	}
 
 	void Update () {		
-		HighlightMouseOver ();
-//		HighlightOccupied ();
+
 	}
 
 	void LateUpdate () {
+		HighlightMouseOver ();
+//		HighlightOccupied ();
 	}
 
 	public void SetNeighbors () {
@@ -44,6 +46,18 @@ public class Tile : MonoBehaviour {
 		}
 		else
 			neighbors [cardinalDirection] = null;
+	}
+
+	void CheckObstructed () {
+		RaycastHit hit;
+		if (Physics.Raycast (transform.position + Vector3.down, Vector3.up, out hit, 2f)) {
+			GameObject go = hit.transform.gameObject;
+			if (go.GetComponent<TerrainObject> () != null) {
+				if (go.GetComponent<TerrainObject> ().obstructsMovement) {
+					isWalkable = false;
+				}
+			}
+		}
 	}
 
 	public void AddHighlight () {

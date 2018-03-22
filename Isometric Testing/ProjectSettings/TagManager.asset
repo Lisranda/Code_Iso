@@ -17,9 +17,9 @@ TagManager:
   - 
   - 
   - Player
-  - Terrain
-  - 
-  - 
+  - Floor
+  - TerrainObject
+  - Wall
   - 
   - 
   - 
