@@ -15,12 +15,11 @@ public class CameraController : MonoBehaviour {
 		transform.position = player.transform.position - 30 * transform.forward;
 	}
 
-	void Update () {
-		
+	void Update () {		
 	}
 
 	void LateUpdate () {
 		transform.rotation = rotation;
-		transform.position = player.transform.position - 30 * transform.forward;
+		transform.position = player.transform.position - 30 * transform.forward;		
 	}
 }

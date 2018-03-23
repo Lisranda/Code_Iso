@@ -13,9 +13,10 @@ public class PlayerController : PawnController {
 		DrawForwardRay ();
 		MovementInput ();
 		RightClick ();
+		MoveOnPath ();
 	}
 
-	void LateUpdate () {
+	void LateUpdate () {		
 		MouseOver ();
 	}
 
@@ -51,9 +52,11 @@ public class PlayerController : PawnController {
 	}
 
 	void RightClick (){
-		if (Input.GetMouseButtonUp (1)) {
+		if (Input.GetMouseButton (1)) {
 			if (RayToTile () != null) {
-				tileTarget = RayToTile ();
+				if (RayToTile ().GetComponent<Tile> ().isWalkable) {
+					tileTarget = RayToTile ();
+				}
 			}
 		}
 	}

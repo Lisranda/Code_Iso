@@ -12,6 +12,76 @@ public class PawnController : MonoBehaviour {
 	[SerializeField] protected GameObject tileLocation;
 	[SerializeField] protected GameObject tileTarget;
 
+	Dictionary<GameObject,GameObject> goParents;
+
+	protected void MoveOnPath () {
+		if (tileLocation == tileTarget) {
+			tileTarget = null;
+		}
+		if (tileTarget != null && !isMoving) {
+			IList<GameObject> path = CalculatePath (tileLocation, tileTarget);
+			if (path.Count > 0) {
+				Vector3 direction = GetDirectionForMove (path [path.Count - 1]);
+				Facing face = GetFacingForMove (path [path.Count - 1]);
+				MoveOrRotate(face, direction);
+			}
+		}
+	}
+
+	protected IList<GameObject> CalculatePath (GameObject goStart, GameObject goTarget) {
+		goParents = new Dictionary<GameObject, GameObject> ();
+		IList<GameObject> path = new List<GameObject> ();
+
+		GameObject pathTarget = BFS (goStart, goTarget);
+
+		if (pathTarget == goStart) {
+			//We failed to find a path, more error checking is needed.
+			return null;
+		}
+
+		GameObject pathCurrent = pathTarget;
+		while (pathCurrent != goStart) {
+			path.Add (pathCurrent);
+			pathCurrent = goParents [pathCurrent];
+		}
+
+		return path;
+	}
+
+	protected GameObject BFS (GameObject goStart, GameObject goTarget){
+		Queue<GameObject> goQueue = new Queue<GameObject> ();
+		HashSet<GameObject> explored = new HashSet<GameObject> ();
+		goQueue.Enqueue (goStart);
+
+		while (goQueue.Count != 0) {
+			GameObject goCurrent = goQueue.Dequeue ();
+			if (goCurrent == goTarget) {
+				return goCurrent;
+			}
+
+			IList<GameObject> goNeighbors = GetWalkableNeighbors (goCurrent);
+
+			foreach (GameObject go in goNeighbors) {
+				if (!explored.Contains (go)) {
+					explored.Add (go);
+					goParents.Add (go, goCurrent);
+					goQueue.Enqueue (go);
+				}
+			}
+		}
+		return goStart;
+	}
+
+	protected List<GameObject> GetWalkableNeighbors (GameObject tileGO){
+		List<GameObject> goList = new List<GameObject> ();
+		foreach (GameObject go in tileGO.GetComponent<Tile> ().neighbors) {
+			if (go != null && go.GetComponent<Tile> ().isWalkable) {
+				goList.Add (go);
+			}
+		}
+		return goList;
+	}
+
 	#region UTILITY FUNCTIONS
 
 	protected void DrawForwardRay () {
@@ -70,6 +140,28 @@ public class PawnController : MonoBehaviour {
 			}
 		}
 		return true;
+	}
+
+	protected Vector3 GetDirectionForMove (GameObject goTarget){
+		Vector3 direction = goTarget.transform.position - transform.position;
+		direction.y = 0;
+		return direction;
+	}
+
+	protected Facing GetFacingForMove (GameObject goTarget) {
+		Vector3 direction = GetDirectionForMove (goTarget);
+		Facing facing = Facing.North;
+
+		if (direction == Vector3.left)
+			facing = Facing.North;
+		if (direction == Vector3.right)
+			facing = Facing.South;
+		if (direction == Vector3.back)
+			facing = Facing.West;
+		if (direction == Vector3.forward)
+			facing = Facing.East;
+
+		return facing;
 	}
 
 	protected void MoveOrRotate (Facing face, Vector3 direction) {		
