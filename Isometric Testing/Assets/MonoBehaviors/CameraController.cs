@@ -1,16 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class CameraController : MonoBehaviour {
+public class CameraController : NetworkBehaviour {
 	GameObject player;
 	Vector3 initialPosition;
 	Quaternion rotation;
 	Vector3 position;
 
-	void Start () {
+	void Start () {		
 		rotation = transform.rotation;
-//		player = GameObject.FindGameObjectWithTag ("Player");
 		player = transform.parent.gameObject;
 		transform.position = player.transform.position - 30 * transform.forward;
 	}

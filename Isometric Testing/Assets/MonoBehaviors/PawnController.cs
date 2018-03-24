@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PawnController : MonoBehaviour {
+public class PawnController : NetworkBehaviour {
 	[SerializeField] protected bool showForwardRay = false;
 	protected float cardinalSpeed = 5f;
-	protected float rotateSpeed = 3f;
+	protected float rotateSpeed = 720f;
 	protected bool isMoving = false;
 	protected enum Facing {North, East, South, West};
 	[SerializeField] protected Facing facingDirection = new Facing ();
@@ -13,6 +14,8 @@ public class PawnController : MonoBehaviour {
 	[SerializeField] protected GameObject tileTarget;
 
 	Dictionary<GameObject,GameObject> goParents;
+
+	#region BFS PATHFINDING
 
 	protected void MoveOnPath () {
 		if (tileLocation == tileTarget) {
@@ -75,14 +78,24 @@ public class PawnController : MonoBehaviour {
 	protected List<GameObject> GetWalkableNeighbors (GameObject tileGO){
 		List<GameObject> goList = new List<GameObject> ();
 		foreach (GameObject go in tileGO.GetComponent<Tile> ().neighbors) {
-			if (go != null && go.GetComponent<Tile> ().isWalkable) {
+			if (go != null && go.GetComponent<Tile> ().isWalkable && !go.GetComponent<Tile> ().isOccupied) {
 				goList.Add (go);
 			}
 		}
 		return goList;
 	}
 
+	#endregion
+
 	#region UTILITY FUNCTIONS
+
+	[Command] protected void CmdMakeReserved (GameObject tile) {
+		tile.GetComponent<Tile> ().isReserved = true;
+	}
+
+	[Command] protected void CmdReleaseReserved (GameObject tile) {
+		tile.GetComponent<Tile> ().isReserved = false;
+	}
 
 	protected void DrawForwardRay () {
 		if (showForwardRay) {
@@ -92,9 +105,24 @@ public class PawnController : MonoBehaviour {
 	}
 
 	protected void SetInitialPosition () {
+		transform.position = new Vector3 (1f, 1.25f, 1f);
 		tileLocation = FindTileLocation (transform.position);
-		tileLocation.GetComponent<Tile> ().isOccupied = true;
-		transform.position = new Vector3 (tileLocation.transform.position.x, tileLocation.transform.position.y - 0.5f + 1.25f, tileLocation.transform.position.z);
+		CmdMakeReserved (tileLocation);
+		CmdSetInitialPosition ();
+	}
+
+	[Command] protected void CmdSetInitialPosition () {
+		transform.position = new Vector3 (1f, 1.25f, 1f);
+		tileLocation = FindTileLocation (transform.position);
+	}
+
+	[Command] protected void CmdSetPositionToServer (GameObject tilePos, Vector3 worldPos) {
+		tileLocation = tilePos;
+		transform.position = worldPos;
+	}
+
+	[Command] protected void CmdSetFacingToServer (Facing face) {
+		facingDirection = face;
 	}
 
 	protected void SetInitialFacing () {
@@ -126,13 +154,16 @@ public class PawnController : MonoBehaviour {
 		RaycastHit hit;
 
 		if (Physics.Raycast (transform.position, direction, 1f))
+			//If there is a collider in the way, don't move.
 			return false;
 		if (!Physics.Raycast (target, Vector3.down, 1f))
+			//If there is no tile ahead, don't move.
 			return false;
 		if (Physics.Raycast (target, Vector3.down, out hit, 1f)) {
 			GameObject go = hit.transform.gameObject;
 			if (go.GetComponent<Tile> () != null) {
 				Tile tile = go.GetComponent<Tile> ();
+				//If there is a tile ahead but it is not walkable or is occupied, don't move.
 				if (!tile.isWalkable)
 					return false;
 				if (tile.isOccupied)
@@ -175,13 +206,14 @@ public class PawnController : MonoBehaviour {
 		Vector3 target = transform.position + direction;
 		GameObject targetGO = FindTileLocation (target);
 		if (PathClear (direction)) {
-			targetGO.GetComponent<Tile> ().isOccupied = true;
+			CmdMakeReserved (targetGO);
 			StartCoroutine (ExecuteMove (targetGO));
 		}	
 	}
 
 	protected void InitiateRotate (Facing face, Vector3 direction){
 		facingDirection = face;
+		CmdSetFacingToServer (face);
 		StartCoroutine (ExecuteRotate (direction));
 	}
 
@@ -190,14 +222,16 @@ public class PawnController : MonoBehaviour {
 	#region COROUTINES
 
 	protected IEnumerator ExecuteMove (GameObject targetGO) {
-		Vector3 target = new Vector3 (targetGO.transform.position.x, tileLocation.transform.position.y - 0.5f + 1.25f, targetGO.transform.position.z);
+		Vector3 target = new Vector3 (targetGO.transform.position.x, tileLocation.transform.position.y + 1.25f, targetGO.transform.position.z);
 		isMoving = true;
 		while (transform.position != target) {
 			transform.position = Vector3.MoveTowards (transform.position, target, cardinalSpeed * Time.deltaTime);
 			yield return null;
 		}
-		tileLocation.GetComponent<Tile> ().isOccupied = false;
+		CmdReleaseReserved (tileLocation);
 		tileLocation = FindTileLocation (transform.position);
+		CmdSetPositionToServer (tileLocation, transform.position);
+		CmdReleaseReserved (tileLocation);
 		isMoving = false;
 	}
 
@@ -206,7 +240,7 @@ public class PawnController : MonoBehaviour {
 		Quaternion targetRotation = Quaternion.LookRotation (target);
 
 		while (transform.rotation != targetRotation) {
-			transform.rotation = Quaternion.RotateTowards (transform.rotation, targetRotation, rotateSpeed);
+			transform.rotation = Quaternion.RotateTowards (transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
 			yield return null;
 		}
 
