@@ -535,6 +535,9 @@ MonoBehaviour:
   tileLocation: {fileID: 0}
   tileTarget: {fileID: 0}
   cam: {fileID: 20114900371726032}
+  fadeLayers:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &114640534354658760
 MonoBehaviour:
   m_ObjectHideFlags: 1

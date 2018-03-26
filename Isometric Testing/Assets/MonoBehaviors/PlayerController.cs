@@ -7,10 +7,13 @@ public class PlayerController : PawnController {
 
 	public Camera cam;
 	Quaternion rotation;
+	public LayerMask fadeLayers;
+	List<GameObject> oldFades;
 
 	#region BEHAVIOURS
 
 	void Start () {	
+		oldFades = new List<GameObject> ();
 		if (!isLocalPlayer) {
 			cam.enabled = false;
 		}			
@@ -33,6 +36,7 @@ public class PlayerController : PawnController {
 		MoveOnPath ();
 		MovementInput ();
 		RightClick ();
+		FindObstruction ();
 	}
 
 	void LateUpdate () {
@@ -44,6 +48,32 @@ public class PlayerController : PawnController {
 	}
 
 	#endregion
+
+	void FindObstruction () {
+		Ray ray = cam.ScreenPointToRay (cam.WorldToScreenPoint(transform.position));
+		RaycastHit[] hits = Physics.RaycastAll (ray, 50f, fadeLayers);
+		Color op;
+		Color fade;
+
+		if (oldFades.Count > 0) {
+			foreach (GameObject go in oldFades) {
+				// Return previously faded things to normal.
+				oldFades.Clear ();
+			}
+		}
+
+		if (hits.Length > 0) {
+			foreach (RaycastHit h in hits) {
+				Renderer r = h.transform.gameObject.GetComponent<Renderer> ();
+				r.material.SetFloat ("_Mode", 2f);
+				r.material.color = new Color (r.material.color.r, r.material.color.g, r.material.color.b, .50f);
+				r.material.EnableKeyword ("_Color");
+			}
+		}
+
+
+
+	}
 
 	#region UTILITY FUNCTIONS
 
