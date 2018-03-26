@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class PlayerController : PawnController {
 
@@ -12,8 +13,7 @@ public class PlayerController : PawnController {
 	void Start () {	
 		if (!isLocalPlayer) {
 			cam.enabled = false;
-		}	
-		
+		}			
 	}
 
 	public override void OnStartLocalPlayer () {
@@ -21,13 +21,14 @@ public class PlayerController : PawnController {
 		SetInitialPosition ();
 		InitializeCamera ();
 		SetInitialFacing ();
+		SetLocalPlayer ();
 	}
 		
-	void Update () {
+	public override void Update () {
 		if (!isLocalPlayer) {
 			return;
 		}		
-
+		base.Update ();
 		DrawForwardRay ();
 		MoveOnPath ();
 		MovementInput ();
@@ -45,6 +46,10 @@ public class PlayerController : PawnController {
 	#endregion
 
 	#region UTILITY FUNCTIONS
+
+	void SetLocalPlayer () {
+		transform.tag = "Local Player";
+	}
 
 	void RandomPlayerColor () {
 		int random = Random.Range (0, 10);
@@ -119,7 +124,7 @@ public class PlayerController : PawnController {
 	void RightClick (){
 		if (Input.GetMouseButton (1)) {
 			if (RayToTile () != null) {
-				if (RayToTile ().GetComponent<Tile> ().isWalkable) {
+				if (RayToTile ().GetComponent<Tile> ().isWalkable && !RayToTile ().GetComponent<Tile> ().isOccupied) {
 					tileTarget = RayToTile ();
 				}
 			}

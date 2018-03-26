@@ -22,37 +22,37 @@ public class Tile : NetworkBehaviour {
 	}
 
 	void Update () {
+		ReleaseOccupied ();
 	}
 
 	void LateUpdate () {
 		OccupyReserves ();
-		ReleaseOccupied ();
+
 		HighlightMouseOver ();
 	}
 
 	void OccupyReserves () {
-		if (isReserved)
-			isOccupied = true;
-	}
-
-	public GameObject testing;
-
-	void ReleaseOccupied () {
 		if (isServer) {
-			if (isOccupied) {
-				RaycastHit hit;
-				if (Physics.Raycast (transform.position, Vector3.up, out hit, 1f)) {
-					GameObject go = hit.transform.gameObject;
-					testing = go;
-					if (go.GetComponent<PawnController> () != null) {
-						return;
-					} else if (go.GetComponent<PawnController> () == null && !isReserved) {
-						isOccupied = false;
-					}
-				} else if (!isReserved) {
+			if (isReserved)
+				isOccupied = true;
+		}
+	}
+		
+	void ReleaseOccupied () {
+		if (isServer) {			
+			RaycastHit hit;
+			Vector3 mod = new Vector3 (0f, -0.5f, 0f);
+			if (Physics.Raycast (transform.position + mod, Vector3.up, out hit, 5f)) {
+				Debug.DrawRay (transform.position, Vector3.up, Color.red);
+				GameObject go = hit.transform.gameObject;
+				if (go.GetComponent<PawnController> () != null) {
+					return;
+				} else if (go.GetComponent<PawnController> () == null && !isReserved) {
 					isOccupied = false;
 				}
-			}
+			} else if (!isReserved) {
+				isOccupied = false;
+			}			
 		}
 	}
 
@@ -78,7 +78,8 @@ public class Tile : NetworkBehaviour {
 
 	void CheckObstructed () {
 		RaycastHit hit;
-		if (Physics.Raycast (transform.position, Vector3.up, out hit, 1f)) {
+		Vector3 mod = new Vector3 (0f, -0.5f, 0f);
+		if (Physics.Raycast (transform.position + mod, Vector3.up, out hit, 1f)) {
 			GameObject go = hit.transform.gameObject;
 			if (go.GetComponent<TerrainObject> () != null) {
 				if (go.GetComponent<TerrainObject> ().obstructsMovement) {
@@ -99,14 +100,13 @@ public class Tile : NetworkBehaviour {
 	void HighlightMouseOver () {
 		if (mouseOver) {
 			if (isWalkable && !isOccupied)
-				GetComponent<Renderer> ().material.color = Color.green;
+				GetComponent<Renderer> ().materials [1].color = Color.green;
 			else if (isWalkable && isOccupied)
-				GetComponent<Renderer> ().material.color = Color.yellow;
+				GetComponent<Renderer> ().materials [1].color = Color.yellow;
 			else
-				GetComponent<Renderer> ().material.color = Color.red;
-		}
-		else
-			GetComponent<Renderer> ().material.color = Color.white;
+				GetComponent<Renderer> ().materials [1].color = Color.red;
+		} else
+			GetComponent<Renderer> ().materials [1].color = Color.white;
 
 		mouseOver = false;
 	}

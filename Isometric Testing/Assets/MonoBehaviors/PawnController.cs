@@ -15,31 +15,48 @@ public class PawnController : NetworkBehaviour {
 
 	Dictionary<GameObject,GameObject> goParents;
 
+	public virtual void Update () {
+		if (isServer) {
+		}
+
+		if (!isLocalPlayer) {
+			return;
+		}
+
+		CmdOccupyTile (tileLocation);
+
+	}
+
 	#region BFS PATHFINDING
 
 	protected void MoveOnPath () {
 		if (tileLocation == tileTarget) {
 			tileTarget = null;
 		}
-		if (tileTarget != null && !isMoving) {
-			IList<GameObject> path = CalculatePath (tileLocation, tileTarget);
+		if (tileLocation != null && tileTarget != null && !isMoving) {
+			List<GameObject> path = CalculatePath (tileLocation, tileTarget);
 			if (path.Count > 0) {
-				Vector3 direction = GetDirectionForMove (path [path.Count - 1]);
-				Facing face = GetFacingForMove (path [path.Count - 1]);
-				MoveOrRotate(face, direction);
+				if (path [path.Count - 1] == tileLocation) {
+					tileTarget = null;
+					path.Clear ();
+				} else {
+					Vector3 direction = GetDirectionForMove (path [path.Count - 1]);
+					Facing face = GetFacingForMove (path [path.Count - 1]);
+					MoveOrRotate(face, direction);
+				}
 			}
-		}
+		} 
 	}
 
-	protected IList<GameObject> CalculatePath (GameObject goStart, GameObject goTarget) {
+	protected List<GameObject> CalculatePath (GameObject goStart, GameObject goTarget) {
 		goParents = new Dictionary<GameObject, GameObject> ();
-		IList<GameObject> path = new List<GameObject> ();
+		List<GameObject> path = new List<GameObject> ();
 
 		GameObject pathTarget = BFS (goStart, goTarget);
 
 		if (pathTarget == goStart) {
-			//We failed to find a path, more error checking is needed.
-			return null;
+			path.Add (pathTarget);
+			return path;
 		}
 
 		GameObject pathCurrent = pathTarget;
@@ -53,7 +70,7 @@ public class PawnController : NetworkBehaviour {
 
 	protected GameObject BFS (GameObject goStart, GameObject goTarget){
 		Queue<GameObject> goQueue = new Queue<GameObject> ();
-		HashSet<GameObject> explored = new HashSet<GameObject> ();
+		List<GameObject> explored = new List<GameObject> ();
 		goQueue.Enqueue (goStart);
 
 		while (goQueue.Count != 0) {
@@ -62,7 +79,7 @@ public class PawnController : NetworkBehaviour {
 				return goCurrent;
 			}
 
-			IList<GameObject> goNeighbors = GetWalkableNeighbors (goCurrent);
+			List<GameObject> goNeighbors = GetWalkableNeighbors (goCurrent);
 
 			foreach (GameObject go in goNeighbors) {
 				if (!explored.Contains (go)) {
@@ -97,6 +114,10 @@ public class PawnController : NetworkBehaviour {
 		tile.GetComponent<Tile> ().isReserved = false;
 	}
 
+	[Command] protected void CmdOccupyTile (GameObject tile) {
+		tile.GetComponent<Tile> ().isOccupied = true;
+	}	
+
 	protected void DrawForwardRay () {
 		if (showForwardRay) {
 			Vector3 fwd = transform.TransformDirection (Vector3.forward) * 10;
@@ -105,20 +126,19 @@ public class PawnController : NetworkBehaviour {
 	}
 
 	protected void SetInitialPosition () {
-		transform.position = new Vector3 (1f, 1.25f, 1f);
+		transform.position = new Vector3 (0f, 0f, 0f);
 		tileLocation = FindTileLocation (transform.position);
-		CmdMakeReserved (tileLocation);
-		CmdSetInitialPosition ();
+//		CmdMakeReserved (tileLocation);
+//		CmdSetInitialPosition ();
 	}
 
 	[Command] protected void CmdSetInitialPosition () {
-		transform.position = new Vector3 (1f, 1.25f, 1f);
+		transform.position = new Vector3 (0f, 0f, 0f);
 		tileLocation = FindTileLocation (transform.position);
 	}
 
-	[Command] protected void CmdSetPositionToServer (GameObject tilePos, Vector3 worldPos) {
+	[Command] protected void CmdSetTileLocationToServer (GameObject tilePos) {
 		tileLocation = tilePos;
-		transform.position = worldPos;
 	}
 
 	[Command] protected void CmdSetFacingToServer (Facing face) {
@@ -138,8 +158,9 @@ public class PawnController : NetworkBehaviour {
 
 	protected GameObject FindTileLocation (Vector3 location) {
 		RaycastHit hit;
+		Vector3 mod = new Vector3 (0f, 0.5f, 0f);
 
-		if (Physics.Raycast (location, Vector3.down, out hit, 1f)) {
+		if (Physics.Raycast (location + mod, Vector3.down, out hit, 1f)) {
 			return hit.transform.gameObject;
 		}
 		return null;
@@ -151,27 +172,23 @@ public class PawnController : NetworkBehaviour {
 
 	protected bool PathClear (Vector3 direction) {
 		Vector3 target = transform.position + direction;
-		RaycastHit hit;
+		GameObject targetGO = FindTileLocation (target);
+		Tile targetTile;
 
-		if (Physics.Raycast (transform.position, direction, 1f))
-			//If there is a collider in the way, don't move.
+		if (targetGO == null)
 			return false;
-		if (!Physics.Raycast (target, Vector3.down, 1f))
-			//If there is no tile ahead, don't move.
+		
+		targetTile = targetGO.GetComponent<Tile> ();
+
+		if (targetTile == null)
 			return false;
-		if (Physics.Raycast (target, Vector3.down, out hit, 1f)) {
-			GameObject go = hit.transform.gameObject;
-			if (go.GetComponent<Tile> () != null) {
-				Tile tile = go.GetComponent<Tile> ();
-				//If there is a tile ahead but it is not walkable or is occupied, don't move.
-				if (!tile.isWalkable)
-					return false;
-				if (tile.isOccupied)
-					return false;
-			}
-		}
+		if (!targetTile.isWalkable)
+			return false;
+		if (targetTile.isOccupied)
+			return false;
+
 		return true;
-	}
+	}		
 
 	protected Vector3 GetDirectionForMove (GameObject goTarget){
 		Vector3 direction = goTarget.transform.position - transform.position;
@@ -213,7 +230,7 @@ public class PawnController : NetworkBehaviour {
 
 	protected void InitiateRotate (Facing face, Vector3 direction){
 		facingDirection = face;
-		CmdSetFacingToServer (face);
+//		CmdSetFacingToServer (face);
 		StartCoroutine (ExecuteRotate (direction));
 	}
 
@@ -222,15 +239,14 @@ public class PawnController : NetworkBehaviour {
 	#region COROUTINES
 
 	protected IEnumerator ExecuteMove (GameObject targetGO) {
-		Vector3 target = new Vector3 (targetGO.transform.position.x, tileLocation.transform.position.y + 1.25f, targetGO.transform.position.z);
+		Vector3 target = new Vector3 (targetGO.transform.position.x, tileLocation.transform.position.y, targetGO.transform.position.z);
 		isMoving = true;
 		while (transform.position != target) {
 			transform.position = Vector3.MoveTowards (transform.position, target, cardinalSpeed * Time.deltaTime);
 			yield return null;
 		}
-		CmdReleaseReserved (tileLocation);
+//		CmdReleaseReserved (tileLocation);
 		tileLocation = FindTileLocation (transform.position);
-		CmdSetPositionToServer (tileLocation, transform.position);
 		CmdReleaseReserved (tileLocation);
 		isMoving = false;
 	}
