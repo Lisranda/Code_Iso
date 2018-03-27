@@ -9,6 +9,7 @@ public class Tile : NetworkBehaviour {
 	[SyncVar] public bool isReserved = false;
 
 	public bool mouseOver = false;
+	public bool movementTarget = false;
 
 	public GameObject[] neighbors = new GameObject[4];
 	const int north = 0;
@@ -28,7 +29,7 @@ public class Tile : NetworkBehaviour {
 	void LateUpdate () {
 		OccupyReserves ();
 
-		HighlightMouseOver ();
+		HighlightTile ();
 	}
 
 	void OccupyReserves () {
@@ -43,7 +44,6 @@ public class Tile : NetworkBehaviour {
 			RaycastHit hit;
 			Vector3 mod = new Vector3 (0f, -0.5f, 0f);
 			if (Physics.Raycast (transform.position + mod, Vector3.up, out hit, 5f)) {
-				Debug.DrawRay (transform.position, Vector3.up, Color.red);
 				GameObject go = hit.transform.gameObject;
 				if (go.GetComponent<PawnController> () != null) {
 					return;
@@ -93,12 +93,14 @@ public class Tile : NetworkBehaviour {
 		mouseOver = true;
 	}
 
-	public void RemoveHighlight () {
-		mouseOver = false;
+	public void AddMovementTarget () {
+		movementTarget = true;
 	}
 
-	void HighlightMouseOver () {
-		if (mouseOver) {
+	void HighlightTile () {
+		if (movementTarget) {
+			GetComponent<Renderer> ().materials [1].color = Color.magenta;
+		} else if (mouseOver) {
 			if (isWalkable && !isOccupied)
 				GetComponent<Renderer> ().materials [1].color = Color.green;
 			else if (isWalkable && isOccupied)
@@ -109,5 +111,6 @@ public class Tile : NetworkBehaviour {
 			GetComponent<Renderer> ().materials [1].color = Color.white;
 
 		mouseOver = false;
+		movementTarget = false;
 	}
 }

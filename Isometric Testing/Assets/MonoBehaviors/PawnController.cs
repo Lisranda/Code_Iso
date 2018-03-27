@@ -15,7 +15,11 @@ public class PawnController : NetworkBehaviour {
 
 	Dictionary<GameObject,GameObject> goParents;
 
-	public virtual void Update () {
+	protected virtual void Start () {
+		SetInitialFacing ();
+	}
+
+	protected virtual void Update () {
 		if (isServer) {
 		}
 
@@ -128,8 +132,6 @@ public class PawnController : NetworkBehaviour {
 	protected void SetInitialPosition () {
 		transform.position = new Vector3 (0f, 0f, 0f);
 		tileLocation = FindTileLocation (transform.position);
-//		CmdMakeReserved (tileLocation);
-//		CmdSetInitialPosition ();
 	}
 
 	[Command] protected void CmdSetInitialPosition () {
@@ -212,7 +214,9 @@ public class PawnController : NetworkBehaviour {
 		return facing;
 	}
 
-	protected void MoveOrRotate (Facing face, Vector3 direction) {		
+	protected void MoveOrRotate (Facing face, Vector3 direction) {
+		if (isMoving)
+			return;
 		if (facingDirection == face)
 			InitiateMove (direction);
 		else

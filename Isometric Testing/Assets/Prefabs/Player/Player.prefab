@@ -38,6 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4645775577792450}
   - component: {fileID: 114533097474303866}
+  - component: {fileID: 114585491484651532}
   - component: {fileID: 54763929213974908}
   - component: {fileID: 114665841261446278}
   - component: {fileID: 23026618792807010}
@@ -538,6 +539,28 @@ MonoBehaviour:
   fadeLayers:
     serializedVersion: 2
     m_Bits: 2048
+--- !u!114 &114585491484651532
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1237400063637420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aebad2556271e24b9e5d0b20711f342, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthMax: 500
+  manaMax: 500
+  healthCurrent: 500
+  manaCurrent: 500
+  healthRegenRate: 10
+  manaRegenRate: 10
+  strength: 5
+  constitution: 5
+  intelligence: 5
+  wisdom: 5
+  dexterity: 5
 --- !u!114 &114640534354658760
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -9,10 +9,13 @@ public class PlayerController : PawnController {
 	Quaternion rotation;
 	public LayerMask fadeLayers;
 	List<GameObject> oldFades;
+	float time = 0f;
+	public enum BlendMode {	Opaque,	Cutout,	Fade, Transparent }
 
 	#region BEHAVIOURS
 
-	void Start () {	
+	protected override void Start () {	
+		base.Start ();
 		oldFades = new List<GameObject> ();
 		if (!isLocalPlayer) {
 			cam.enabled = false;
@@ -20,14 +23,13 @@ public class PlayerController : PawnController {
 	}
 
 	public override void OnStartLocalPlayer () {
-//		RandomPlayerColor ();
 		SetInitialPosition ();
 		InitializeCamera ();
-		SetInitialFacing ();
+//		SetInitialFacing ();
 		SetLocalPlayer ();
 	}
 		
-	public override void Update () {
+	protected override void Update () {
 		if (!isLocalPlayer) {
 			return;
 		}		
@@ -45,66 +47,99 @@ public class PlayerController : PawnController {
 
 		FixCamera ();
 		MouseOver ();
+		MovementTarget ();
 	}
 
 	#endregion
 
+	#region OBJECT FADING
+
 	void FindObstruction () {
-		Ray ray = cam.ScreenPointToRay (cam.WorldToScreenPoint(transform.position));
-		RaycastHit[] hits = Physics.RaycastAll (ray, 50f, fadeLayers);
-		Color op;
-		Color fade;
+		float range = Vector3.Distance (cam.transform.position, transform.position);
+
+		Ray ray = cam.ScreenPointToRay (cam.WorldToScreenPoint (transform.position));
+		RaycastHit[] hits = Physics.RaycastAll (ray, range, fadeLayers);
 
 		if (oldFades.Count > 0) {
-			foreach (GameObject go in oldFades) {
-				// Return previously faded things to normal.
-				oldFades.Clear ();
+			time += Time.deltaTime;
+
+			if (time > 1f) {
+				for (int i = 0; i < oldFades.Count; i++) {				
+					GameObject go = oldFades [i];
+					Material m = go.GetComponent<Renderer> ().material;
+					SetupMaterialWithBlendMode (m, BlendMode.Opaque);
+					m.color = new Color (m.color.r, m.color.g, m.color.b, 1f);
+					oldFades.Remove (go);
+					i--;
+					time = 0f;
+				}
 			}
 		}
 
 		if (hits.Length > 0) {
 			foreach (RaycastHit h in hits) {
-				Renderer r = h.transform.gameObject.GetComponent<Renderer> ();
-				r.material.SetFloat ("_Mode", 2f);
-				r.material.color = new Color (r.material.color.r, r.material.color.g, r.material.color.b, .50f);
-				r.material.EnableKeyword ("_Color");
+				Material m = h.transform.gameObject.GetComponent<Renderer> ().material;
+				SetupMaterialWithBlendMode (m, BlendMode.Fade);
+				m.color = new Color (m.color.r, m.color.g, m.color.b, .50f);
+				oldFades.Add (h.transform.gameObject);				
 			}
 		}
-
-
-
 	}
+
+	public void SetupMaterialWithBlendMode(Material material, BlendMode blendMode)
+	{
+		switch (blendMode)
+		{
+		case BlendMode.Opaque:
+			material.SetOverrideTag("RenderType", "");
+			material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+			material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+			material.SetInt("_ZWrite", 1);
+			material.DisableKeyword("_ALPHATEST_ON");
+			material.DisableKeyword("_ALPHABLEND_ON");
+			material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+			material.renderQueue = -1;
+			break;
+		case BlendMode.Cutout:
+			material.SetOverrideTag("RenderType", "TransparentCutout");
+			material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+			material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+			material.SetInt("_ZWrite", 1);
+			material.EnableKeyword("_ALPHATEST_ON");
+			material.DisableKeyword("_ALPHABLEND_ON");
+			material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+			material.renderQueue = 2450;
+			break;
+		case BlendMode.Fade:
+			material.SetOverrideTag("RenderType", "Transparent");
+			material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+			material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+			material.SetInt("_ZWrite", 0);
+			material.DisableKeyword("_ALPHATEST_ON");
+			material.EnableKeyword("_ALPHABLEND_ON");
+			material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+			material.renderQueue = 3000;
+			break;
+		case BlendMode.Transparent:
+			material.SetOverrideTag("RenderType", "Transparent");
+			material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+			material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+			material.SetInt("_ZWrite", 0);
+			material.DisableKeyword("_ALPHATEST_ON");
+			material.DisableKeyword("_ALPHABLEND_ON");
+			material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+			material.renderQueue = 3000;
+			break;
+		}
+	}
+
+	#endregion
 
 	#region UTILITY FUNCTIONS
 
 	void SetLocalPlayer () {
 		transform.tag = "Local Player";
-	}
-
-	void RandomPlayerColor () {
-		int random = Random.Range (0, 10);
-		Color c;
-		if (random == 0)
-			c = Color.red;
-		else if (random == 1)
-			c = Color.blue;
-		else if (random == 2)
-			c = Color.cyan;
-		else if (random == 3)
-			c = Color.green;
-		else if (random == 4)
-			c = Color.magenta;
-		else if (random == 5)
-			c = Color.yellow;
-		else if (random == 6)
-			c = Color.white;
-		else if (random == 7)
-			c = Color.grey;
-		else
-			c = Color.black;
-
-		transform.GetComponent<Renderer> ().material.color = c;
-	}
+	}		
 
 	void InitializeCamera () {
 		rotation = cam.transform.rotation;
@@ -135,19 +170,33 @@ public class PlayerController : PawnController {
 
 	void MovementInput ()
 	{
-		if (!isMoving && Input.GetKey ("w") && !Input.GetKey ("s") && !Input.GetKey ("a") && !Input.GetKey ("d"))
+		if (Input.GetKey ("w") && !Input.GetKey ("s") && !Input.GetKey ("a") && !Input.GetKey ("d")) {
 			MoveOrRotate (Facing.North, Vector3.left);
-		if (!isMoving && Input.GetKey ("s") && !Input.GetKey ("w") && !Input.GetKey ("a") && !Input.GetKey ("d"))
+			tileTarget = null;
+		}
+		if (Input.GetKey ("s") && !Input.GetKey ("w") && !Input.GetKey ("a") && !Input.GetKey ("d")) {
 			MoveOrRotate (Facing.South, Vector3.right);
-		if (!isMoving && Input.GetKey ("a") && !Input.GetKey ("d") && !Input.GetKey ("w") && !Input.GetKey ("s"))
+			tileTarget = null;
+		}
+		if (Input.GetKey ("a") && !Input.GetKey ("d") && !Input.GetKey ("w") && !Input.GetKey ("s")) {
 			MoveOrRotate (Facing.West, Vector3.back);
-		if (!isMoving && Input.GetKey ("d") && !Input.GetKey ("a") && !Input.GetKey ("w") && !Input.GetKey ("s"))
+			tileTarget = null;
+		}
+		if (Input.GetKey ("d") && !Input.GetKey ("a") && !Input.GetKey ("w") && !Input.GetKey ("s")) {
 			MoveOrRotate (Facing.East, Vector3.forward);
+			tileTarget = null;
+		}
 	}
 
 	void MouseOver () {
 		if (RayToTile () != null) {
 			RayToTile ().GetComponent<Tile> ().AddHighlight ();
+		}
+	}
+
+	void MovementTarget() {
+		if (tileTarget != null) {
+			tileTarget.GetComponent<Tile> ().AddMovementTarget ();
 		}
 	}
 
