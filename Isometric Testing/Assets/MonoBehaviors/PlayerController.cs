@@ -17,37 +17,32 @@ public class PlayerController : PawnController {
 	protected override void Start () {	
 		base.Start ();
 		oldFades = new List<GameObject> ();
-		if (!isLocalPlayer) {
-			cam.enabled = false;
-		}			
+		DisableNonLocalCameras ();
 	}
 
 	public override void OnStartLocalPlayer () {
-		SetInitialPosition ();
+//		InitializeTileLocation ();
 		InitializeCamera ();
 //		SetInitialFacing ();
 		SetLocalPlayer ();
 	}
 		
 	protected override void Update () {
-		if (!isLocalPlayer) {
-			return;
-		}		
 		base.Update ();
-		DrawForwardRay ();
-		MoveOnPath ();
-		MovementInput ();
-		RightClick ();
-		FindObstruction ();
+		if (isLocalPlayer) {
+			MovementInput ();
+			MoveOnPath ();
+			RightClick ();
+			FindObstruction ();
+		}
 	}
 
 	void LateUpdate () {
-		if (!isLocalPlayer)
-			return;
-
-		FixCamera ();
-		MouseOver ();
-		MovementTarget ();
+		if (isLocalPlayer) {
+			FixCamera ();
+			MouseOver ();
+			MovementTarget ();
+		}
 	}
 
 	#endregion
@@ -55,9 +50,9 @@ public class PlayerController : PawnController {
 	#region OBJECT FADING
 
 	void FindObstruction () {
-		float range = Vector3.Distance (cam.transform.position, transform.position);
+		float range = Vector3.Distance (cam.transform.position, tileLocation.transform.position);
 
-		Ray ray = cam.ScreenPointToRay (cam.WorldToScreenPoint (transform.position));
+		Ray ray = cam.ScreenPointToRay (cam.WorldToScreenPoint (tileLocation.transform.position));
 		RaycastHit[] hits = Physics.RaycastAll (ray, range, fadeLayers);
 
 		if (oldFades.Count > 0) {
@@ -149,6 +144,12 @@ public class PlayerController : PawnController {
 	void FixCamera () {
 		cam.transform.rotation = rotation;
 		cam.transform.position = transform.position - 30 * cam.transform.forward;
+	}
+
+	void DisableNonLocalCameras () {
+		if (!isLocalPlayer) {
+			cam.enabled = false;
+		}	
 	}
 
 	GameObject RayToTile () {

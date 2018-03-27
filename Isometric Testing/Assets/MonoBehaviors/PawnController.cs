@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class PawnController : NetworkBehaviour {
-	[SerializeField] protected bool showForwardRay = false;
 	protected float cardinalSpeed = 5f;
 	protected float rotateSpeed = 720f;
 	protected bool isMoving = false;
@@ -16,19 +15,16 @@ public class PawnController : NetworkBehaviour {
 	Dictionary<GameObject,GameObject> goParents;
 
 	protected virtual void Start () {
-		SetInitialFacing ();
+		InitializePawn ();
 	}
 
 	protected virtual void Update () {
 		if (isServer) {
 		}
 
-		if (!isLocalPlayer) {
-			return;
+		if (isLocalPlayer) {
+			CmdOccupyTile (tileLocation);
 		}
-
-		CmdOccupyTile (tileLocation);
-
 	}
 
 	#region BFS PATHFINDING
@@ -44,8 +40,8 @@ public class PawnController : NetworkBehaviour {
 					tileTarget = null;
 					path.Clear ();
 				} else {
-					Vector3 direction = GetDirectionForMove (path [path.Count - 1]);
-					Facing face = GetFacingForMove (path [path.Count - 1]);
+					Vector3 direction = PathfindingGetDirectionForMove (path [path.Count - 1]);
+					Facing face = PathfindingGetFacingForMove (path [path.Count - 1]);
 					MoveOrRotate(face, direction);
 				}
 			}
@@ -108,7 +104,7 @@ public class PawnController : NetworkBehaviour {
 
 	#endregion
 
-	#region UTILITY FUNCTIONS
+	#region COMMANDS
 
 	[Command] protected void CmdMakeReserved (GameObject tile) {
 		tile.GetComponent<Tile> ().isReserved = true;
@@ -120,34 +116,22 @@ public class PawnController : NetworkBehaviour {
 
 	[Command] protected void CmdOccupyTile (GameObject tile) {
 		tile.GetComponent<Tile> ().isOccupied = true;
-	}	
-
-	protected void DrawForwardRay () {
-		if (showForwardRay) {
-			Vector3 fwd = transform.TransformDirection (Vector3.forward) * 10;
-			Debug.DrawRay (transform.position, fwd, Color.green);
-		}
 	}
 
-	protected void SetInitialPosition () {
-		transform.position = new Vector3 (0f, 0f, 0f);
+	#endregion
+
+	#region INITIALIZE PAWNS
+
+	protected void InitializePawn () {
+		InitializeTileLocation ();
+		InitializeFacing ();
+	}
+
+	protected void InitializeTileLocation () {
 		tileLocation = FindTileLocation (transform.position);
 	}
 
-	[Command] protected void CmdSetInitialPosition () {
-		transform.position = new Vector3 (0f, 0f, 0f);
-		tileLocation = FindTileLocation (transform.position);
-	}
-
-	[Command] protected void CmdSetTileLocationToServer (GameObject tilePos) {
-		tileLocation = tilePos;
-	}
-
-	[Command] protected void CmdSetFacingToServer (Facing face) {
-		facingDirection = face;
-	}
-
-	protected void SetInitialFacing () {
+	protected void InitializeFacing () {
 		if (transform.forward == Vector3.left)
 			facingDirection = Facing.North;
 		if (transform.forward == Vector3.right)
@@ -157,6 +141,10 @@ public class PawnController : NetworkBehaviour {
 		if (transform.forward == Vector3.forward)
 			facingDirection = Facing.East;
 	}
+
+	#endregion
+
+	#region UTILITY FUNCTIONS
 
 	protected GameObject FindTileLocation (Vector3 location) {
 		RaycastHit hit;
@@ -170,36 +158,16 @@ public class PawnController : NetworkBehaviour {
 
 	#endregion
 
-	#region MOVEMENT & ROTATION
+	#region MOVEMENT HELPERS
 
-	protected bool PathClear (Vector3 direction) {
-		Vector3 target = transform.position + direction;
-		GameObject targetGO = FindTileLocation (target);
-		Tile targetTile;
-
-		if (targetGO == null)
-			return false;
-		
-		targetTile = targetGO.GetComponent<Tile> ();
-
-		if (targetTile == null)
-			return false;
-		if (!targetTile.isWalkable)
-			return false;
-		if (targetTile.isOccupied)
-			return false;
-
-		return true;
-	}		
-
-	protected Vector3 GetDirectionForMove (GameObject goTarget){
+	protected Vector3 PathfindingGetDirectionForMove (GameObject goTarget){
 		Vector3 direction = goTarget.transform.position - transform.position;
 		direction.y = 0;
 		return direction;
 	}
 
-	protected Facing GetFacingForMove (GameObject goTarget) {
-		Vector3 direction = GetDirectionForMove (goTarget);
+	protected Facing PathfindingGetFacingForMove (GameObject goTarget) {
+		Vector3 direction = PathfindingGetDirectionForMove (goTarget);
 		Facing facing = Facing.North;
 
 		if (direction == Vector3.left)
@@ -214,19 +182,56 @@ public class PawnController : NetworkBehaviour {
 		return facing;
 	}
 
+	protected int GetNeighborArrayRef (Vector3 direction) {
+		int arrayRef = 0;
+		if (direction == Vector3.left)
+			arrayRef = 0;
+		if (direction == Vector3.forward)
+			arrayRef = 1;
+		if (direction == Vector3.right)
+			arrayRef = 2;
+		if (direction == Vector3.back)
+			arrayRef = 3;
+
+		return arrayRef;
+	}
+
+	#endregion
+
+	#region MOVEMENT & ROTATION
+
+	protected bool PathClear (GameObject targetGO) {
+		if (targetGO == null)
+			return false;
+
+		Tile targetTile;
+		targetTile = targetGO.GetComponent<Tile> ();
+
+		if (targetTile == null)
+			return false;
+		if (!targetTile.isWalkable)
+			return false;
+		if (targetTile.isOccupied)
+			return false;
+
+		return true;
+	}
+
 	protected void MoveOrRotate (Facing face, Vector3 direction) {
 		if (isMoving)
 			return;
+
+		int arrayRef = GetNeighborArrayRef (direction);
+		GameObject targetGO = tileLocation.GetComponent<Tile> ().neighbors [arrayRef];
+
 		if (facingDirection == face)
-			InitiateMove (direction);
+			InitiateMove (targetGO);
 		else
 			InitiateRotate (face, direction);
 	}
 
-	protected void InitiateMove (Vector3 direction){
-		Vector3 target = transform.position + direction;
-		GameObject targetGO = FindTileLocation (target);
-		if (PathClear (direction)) {
+	protected void InitiateMove (GameObject targetGO){
+		if (PathClear (targetGO)) {
 			CmdMakeReserved (targetGO);
 			StartCoroutine (ExecuteMove (targetGO));
 		}	
@@ -234,7 +239,6 @@ public class PawnController : NetworkBehaviour {
 
 	protected void InitiateRotate (Facing face, Vector3 direction){
 		facingDirection = face;
-//		CmdSetFacingToServer (face);
 		StartCoroutine (ExecuteRotate (direction));
 	}
 
@@ -243,21 +247,20 @@ public class PawnController : NetworkBehaviour {
 	#region COROUTINES
 
 	protected IEnumerator ExecuteMove (GameObject targetGO) {
-		Vector3 target = new Vector3 (targetGO.transform.position.x, tileLocation.transform.position.y, targetGO.transform.position.z);
 		isMoving = true;
+		Vector3 target = new Vector3 (targetGO.transform.position.x, tileLocation.transform.position.y, targetGO.transform.position.z);
 		while (transform.position != target) {
 			transform.position = Vector3.MoveTowards (transform.position, target, cardinalSpeed * Time.deltaTime);
 			yield return null;
 		}
-//		CmdReleaseReserved (tileLocation);
 		tileLocation = FindTileLocation (transform.position);
 		CmdReleaseReserved (tileLocation);
 		isMoving = false;
 	}
 
-	protected IEnumerator ExecuteRotate (Vector3 target) {
+	protected IEnumerator ExecuteRotate (Vector3 targetDirection) {
 		isMoving = true;
-		Quaternion targetRotation = Quaternion.LookRotation (target);
+		Quaternion targetRotation = Quaternion.LookRotation (targetDirection);
 
 		while (transform.rotation != targetRotation) {
 			transform.rotation = Quaternion.RotateTowards (transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
