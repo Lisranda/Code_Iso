@@ -12,8 +12,6 @@ public class PawnController : NetworkBehaviour {
 	[SerializeField] protected GameObject tileLocation;
 	[SerializeField] protected GameObject tileTarget;
 
-	Dictionary<GameObject,GameObject> goParents;
-
 	protected virtual void Start () {
 		InitializePawn ();
 	}
@@ -32,7 +30,7 @@ public class PawnController : NetworkBehaviour {
 			tileTarget = null;
 		}
 		if (tileLocation != null && tileTarget != null && !isMoving) {
-			List<GameObject> path = CalculatePath (tileLocation, tileTarget);
+			List<GameObject> path = Pathfinding.CalculatePathBF (tileLocation, tileTarget);
 			if (path.Count > 0) {
 				if (path [path.Count - 1] == tileLocation) {
 					tileTarget = null;
@@ -44,60 +42,6 @@ public class PawnController : NetworkBehaviour {
 				}
 			}
 		} 
-	}
-
-	protected List<GameObject> CalculatePath (GameObject goStart, GameObject goTarget) {
-		goParents = new Dictionary<GameObject, GameObject> ();
-		List<GameObject> path = new List<GameObject> ();
-
-		GameObject pathTarget = BFS (goStart, goTarget);
-
-		if (pathTarget == goStart) {
-			path.Add (pathTarget);
-			return path;
-		}
-
-		GameObject pathCurrent = pathTarget;
-		while (pathCurrent != goStart) {
-			path.Add (pathCurrent);
-			pathCurrent = goParents [pathCurrent];
-		}
-
-		return path;
-	}
-
-	protected GameObject BFS (GameObject goStart, GameObject goTarget){
-		Queue<GameObject> goQueue = new Queue<GameObject> ();
-		List<GameObject> explored = new List<GameObject> ();
-		goQueue.Enqueue (goStart);
-
-		while (goQueue.Count != 0) {
-			GameObject goCurrent = goQueue.Dequeue ();
-			if (goCurrent == goTarget) {
-				return goCurrent;
-			}
-
-			List<GameObject> goNeighbors = GetWalkableNeighbors (goCurrent);
-
-			foreach (GameObject go in goNeighbors) {
-				if (!explored.Contains (go)) {
-					explored.Add (go);
-					goParents.Add (go, goCurrent);
-					goQueue.Enqueue (go);
-				}
-			}
-		}
-		return goStart;
-	}
-
-	protected List<GameObject> GetWalkableNeighbors (GameObject tileGO){
-		List<GameObject> goList = new List<GameObject> ();
-		foreach (GameObject go in tileGO.GetComponent<Tile> ().neighbors) {
-			if (go != null && go.GetComponent<Tile> ().isWalkable && !go.GetComponent<Tile> ().isOccupied) {
-				goList.Add (go);
-			}
-		}
-		return goList;
 	}
 
 	#endregion

@@ -19,6 +19,7 @@ public class MonsterController : NPCController {
 			int locZ = Random.Range (0, 10);
 
 			Vector3 location = new Vector3 ((float)locX, (float)locY, (float)locZ);
+//			Vector3 location = new Vector3 (0f, 0f, 0f);
 			Debug.Log (location);
 			if (FindTileLocation (location) != null) {
 				if (FindTileLocation (location).GetComponent<Tile> ().isWalkable && !FindTileLocation (location).GetComponent<Tile> ().isOccupied) {
