@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class PawnController : NetworkBehaviour {
 	protected float cardinalSpeed = 5f;
 	protected float rotateSpeed = 720f;
-	protected bool isMoving = false;
+	[SerializeField] protected bool isMoving = false;
 	protected enum Facing {North, East, South, West};
 	[SerializeField] protected Facing facingDirection = new Facing ();
 	[SerializeField] protected GameObject tileLocation;
@@ -22,9 +22,7 @@ public class PawnController : NetworkBehaviour {
 		if (isServer) {
 		}
 
-		if (isLocalPlayer) {
-			CmdOccupyTile (tileLocation);
-		}
+		CmdOccupyTile (tileLocation);
 	}
 
 	#region BFS PATHFINDING
