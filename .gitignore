@@ -3,10 +3,11 @@
 ###
 [Aa]ssets/AssetStoreTools*
 [Bb]uild/
-[Dd]ev[Bb]uilds
+[Dd]ev[Bb]uilds/
 [Ll]ibrary/
 [Ll]ocal[Cc]ache/
 [Oo]bj/
+[Pp]ro[Cc]ore/
 [Tt]emp/
 [Uu]nityGenerated/
 # file on crash reports
