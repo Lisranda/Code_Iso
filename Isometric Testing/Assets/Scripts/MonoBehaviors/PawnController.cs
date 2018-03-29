@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class PawnController : NetworkBehaviour {
-	protected float cardinalSpeed = 5f;
-	protected float rotateSpeed = 720f;
+	[SerializeField] protected float cardinalSpeed = 5f;
+	[SerializeField] protected float rotateSpeed = 720f;
 	[SerializeField] protected bool isMoving = false;
 	protected enum Facing {North, East, South, West};
 	[SerializeField] protected Facing facingDirection = new Facing ();
