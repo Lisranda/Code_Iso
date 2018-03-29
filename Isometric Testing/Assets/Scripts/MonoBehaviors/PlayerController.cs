@@ -29,6 +29,7 @@ public class PlayerController : PawnController {
 	protected override void Update () {
 		base.Update ();
 		if (isLocalPlayer) {
+			CmdOccupyTile (tileLocation);
 			MovementInput ();
 			MoveOnPath ();
 			RightClick ();

@@ -18,9 +18,8 @@ public class PawnController : NetworkBehaviour {
 
 	protected virtual void Update () {
 		if (isServer) {
+			CmdOccupyTile (tileLocation);
 		}
-
-		CmdOccupyTile (tileLocation);
 	}
 
 	#region BFS PATHFINDING

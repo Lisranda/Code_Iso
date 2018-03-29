@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 114233794605650042}
   - component: {fileID: 114904209534515430}
   - component: {fileID: 65015273950944270}
-  - component: {fileID: 114506442673327768}
-  - component: {fileID: 114724898307818324}
   - component: {fileID: 54340259286092220}
+  - component: {fileID: 114506442673327768}
+  - component: {fileID: 114556699099480250}
   m_Layer: 0
   m_Name: Creature
   m_TagString: Untagged
@@ -443,9 +443,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13f11354205eead43a5923604cd34a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMoving: 0
   facingDirection: 0
   tileLocation: {fileID: 0}
   tileTarget: {fileID: 0}
+  rangeHostile: 4
+  targetHostile: {fileID: 0}
+  hostileTo:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!114 &114506442673327768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -478,19 +484,7 @@ MonoBehaviour:
     i15: 153
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114676071751676020
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1775047106620450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 16342205, guid: 0472bdc8d6d15384d98f22ee34302f9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _entityType: 0
---- !u!114 &114724898307818324
+--- !u!114 &114556699099480250
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -531,6 +525,18 @@ MonoBehaviour:
   sendRate: 30
   networkChannel: 1
   childObjectToSync: {fileID: 0}
+--- !u!114 &114676071751676020
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1775047106620450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 16342205, guid: 0472bdc8d6d15384d98f22ee34302f9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _entityType: 0
 --- !u!114 &114904209534515430
 MonoBehaviour:
   m_ObjectHideFlags: 1

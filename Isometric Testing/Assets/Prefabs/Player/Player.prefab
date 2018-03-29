@@ -19,15 +19,15 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4826889196206646}
-  - component: {fileID: 114685357638618508}
   - component: {fileID: 114628308060613712}
   - component: {fileID: 114778906721880072}
-  - component: {fileID: 114235088789811526}
   - component: {fileID: 65049965251633596}
   - component: {fileID: 54114722308232698}
-  m_Layer: 0
+  - component: {fileID: 114685357638618508}
+  - component: {fileID: 114235088789811526}
+  m_Layer: 8
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 20068503315673376}
   - component: {fileID: 124274503665782996}
   - component: {fileID: 81991070001938660}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ GameObject:
   - component: {fileID: 23058782374429674}
   - component: {fileID: 33727932691853338}
   - component: {fileID: 114453706144526134}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Model
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -572,6 +572,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8717591324cabdd4f98ae8606e24c294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMoving: 0
   facingDirection: 0
   tileLocation: {fileID: 0}
   tileTarget: {fileID: 0}
