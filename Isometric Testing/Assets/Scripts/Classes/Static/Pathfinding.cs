@@ -11,8 +11,12 @@ public static class Pathfinding {
 
 		GameObject pathTarget = BFS (goStart, goTarget);
 
+		if (pathTarget == null) {
+			return path;
+		}
+
 		if (pathTarget == goStart) {
-			path.Add (pathTarget);
+//			path.Add (pathTarget);
 			return path;
 		}
 
@@ -46,7 +50,7 @@ public static class Pathfinding {
 				}
 			}
 		}
-		return goStart;
+		return null;
 	}
 
 	public static List<GameObject> GetWalkableNeighbors (GameObject tileGO){

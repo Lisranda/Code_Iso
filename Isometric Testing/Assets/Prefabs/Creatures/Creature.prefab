@@ -448,10 +448,11 @@ MonoBehaviour:
   isMoving: 0
   facingDirection: 0
   tileLocation: {fileID: 0}
-  tileTarget: {fileID: 0}
+  tileMoveTarget: {fileID: 0}
   hostileTo:
     serializedVersion: 2
     m_Bits: 256
+  roamTime: 5
   rangeHostile: 4
   targetHostile: {fileID: 0}
   targetHostileTile: {fileID: 0}

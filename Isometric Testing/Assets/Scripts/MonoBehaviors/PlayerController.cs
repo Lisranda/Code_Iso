@@ -127,19 +127,19 @@ public class PlayerController : PawnController {
 	{
 		if (Input.GetKey ("w") && !Input.GetKey ("s") && !Input.GetKey ("a") && !Input.GetKey ("d")) {
 			MoveOrRotate (Facing.North, Vector3.left);
-			tileTarget = null;
+			tileMoveTarget = null;
 		}
 		if (Input.GetKey ("s") && !Input.GetKey ("w") && !Input.GetKey ("a") && !Input.GetKey ("d")) {
 			MoveOrRotate (Facing.South, Vector3.right);
-			tileTarget = null;
+			tileMoveTarget = null;
 		}
 		if (Input.GetKey ("a") && !Input.GetKey ("d") && !Input.GetKey ("w") && !Input.GetKey ("s")) {
 			MoveOrRotate (Facing.West, Vector3.back);
-			tileTarget = null;
+			tileMoveTarget = null;
 		}
 		if (Input.GetKey ("d") && !Input.GetKey ("a") && !Input.GetKey ("w") && !Input.GetKey ("s")) {
 			MoveOrRotate (Facing.East, Vector3.forward);
-			tileTarget = null;
+			tileMoveTarget = null;
 		}
 	}
 
@@ -150,8 +150,8 @@ public class PlayerController : PawnController {
 	}
 
 	void MovementTarget() {
-		if (tileTarget != null) {
-			tileTarget.GetComponent<Tile> ().AddMovementTarget ();
+		if (tileMoveTarget != null) {
+			tileMoveTarget.GetComponent<Tile> ().AddMovementTarget ();
 		}
 	}
 
@@ -159,7 +159,7 @@ public class PlayerController : PawnController {
 		if (Input.GetMouseButton (1)) {
 			if (RayToTile () != null) {
 				if (RayToTile ().GetComponent<Tile> ().isWalkable && !RayToTile ().GetComponent<Tile> ().isOccupied) {
-					tileTarget = RayToTile ();
+					tileMoveTarget = RayToTile ();
 				}
 			}
 		}

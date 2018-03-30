@@ -10,7 +10,7 @@ public class PawnController : NetworkBehaviour {
 	protected enum Facing {North, East, South, West};
 	[SerializeField] protected Facing facingDirection = new Facing ();
 	[SerializeField] protected GameObject tileLocation;
-	[SerializeField] protected GameObject tileTarget;
+	[SerializeField] protected GameObject tileMoveTarget;
 
 	protected virtual void Start () {
 		InitializePawn ();
@@ -25,21 +25,27 @@ public class PawnController : NetworkBehaviour {
 	#region BFS PATHFINDING
 
 	protected void MoveOnPath () {
-		if (tileLocation == tileTarget) {
-			tileTarget = null;
-		}
-		if (tileLocation != null && tileTarget != null && !isMoving) {
-			List<GameObject> path = Pathfinding.CalculatePathBF (tileLocation, tileTarget);
-			if (path.Count > 0) {
-				if (path [path.Count - 1] == tileLocation) {
-					tileTarget = null;
-					path.Clear ();
-				} else {
-					Vector3 direction = PathfindingGetDirectionForMove (path [path.Count - 1]);
-					Facing face = PathfindingGetFacingForMove (path [path.Count - 1]);
-					MoveOrRotate(face, direction);
-				}
-			}
+		//Remove our move target if we are already on it.
+		if (tileLocation == tileMoveTarget)
+			tileMoveTarget = null;
+
+		if (tileLocation != null && tileMoveTarget != null && !isMoving) {
+			List<GameObject> path = Pathfinding.CalculatePathBF (tileLocation, tileMoveTarget);
+
+			if (path.Count == 0) {
+				tileMoveTarget = null;
+				return;
+			}				
+				
+//			if (path [path.Count - 1] == tileLocation) {
+//				tileTarget = null;
+//				return;
+//				path.Clear ();
+//			}
+
+			Vector3 direction = PathfindingGetDirectionForMove (path [path.Count - 1]);
+			Facing face = PathfindingGetFacingForMove (path [path.Count - 1]);
+			MoveOrRotate (face, direction);			
 		} 
 	}
 
