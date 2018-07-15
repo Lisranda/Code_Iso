@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PawnController : MonoBehaviour {
-	[SerializeField] protected float cardinalSpeed = 5f;
-	[SerializeField] protected float runCardinalSpeed = 8f;
-	[SerializeField] protected float currentCardinalSpeed;
+	[SerializeField] protected float cardinalSpeed;
 	[SerializeField] protected float rotateSpeed = 720f;
 	[SerializeField] protected bool isMoving = false;
 	[SerializeField] protected bool isSprinting = false;
@@ -21,6 +19,10 @@ public class PawnController : MonoBehaviour {
 	protected virtual void Update () {
 		SetSpeed ();
 		OccupyTile (tileLocation);
+	}
+
+	protected virtual void LateUpdate () {
+		AnimateMoving ();
 	}
 
 	#region BFS PATHFINDING
@@ -71,9 +73,13 @@ public class PawnController : MonoBehaviour {
 	#region INITIALIZE PAWNS
 
 	protected void InitializePawn () {
-		currentCardinalSpeed = cardinalSpeed;
+		InitializeSpeed ();
 		InitializeTileLocation ();
 		InitializeFacing ();
+	}
+
+	protected void InitializeSpeed () {
+		cardinalSpeed = gameObject.GetComponent<CreatureStats> ().GetSpeedNormal ();
 	}
 
 	protected void InitializeTileLocation () {
@@ -151,9 +157,9 @@ public class PawnController : MonoBehaviour {
 
 	protected void SetSpeed () {
 		if (isSprinting)
-			currentCardinalSpeed = runCardinalSpeed;
+			cardinalSpeed = gameObject.GetComponent<CreatureStats> ().GetSpeedSprint ();
 		else
-			currentCardinalSpeed = cardinalSpeed;
+			cardinalSpeed = gameObject.GetComponent<CreatureStats> ().GetSpeedNormal ();
 	}
 
 	protected bool PathClear (GameObject targetGO) {
@@ -206,12 +212,22 @@ public class PawnController : MonoBehaviour {
 		isMoving = true;
 		Vector3 target = new Vector3 (targetGO.transform.position.x, tileLocation.transform.position.y, targetGO.transform.position.z);
 		while (transform.position != target) {
-			transform.position = Vector3.MoveTowards (transform.position, target, currentCardinalSpeed * Time.deltaTime);
+			transform.position = Vector3.MoveTowards (transform.position, target, cardinalSpeed * Time.deltaTime);
 			yield return null;
 		}
 		tileLocation = FindTileLocation (transform.position);
 		ReleaseReserved (tileLocation);
+		yield return new WaitForEndOfFrame ();
 		isMoving = false;
+	}
+
+	protected void AnimateMoving () {
+		if (isMoving && isSprinting)
+			gameObject.GetComponent<Animator> ().SetFloat ("Speed", 1f);
+		else if (isMoving)
+			gameObject.GetComponent<Animator> ().SetFloat ("Speed", 0.25f);
+		else
+			gameObject.GetComponent<Animator> ().SetFloat ("Speed", 0f);
 	}
 
 	protected IEnumerator ExecuteRotate (Vector3 targetDirection) {
@@ -223,6 +239,7 @@ public class PawnController : MonoBehaviour {
 			yield return null;
 		}
 
+		yield return new WaitForEndOfFrame ();
 		isMoving = false;
 	}
 

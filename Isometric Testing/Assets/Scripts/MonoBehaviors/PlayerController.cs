@@ -19,13 +19,6 @@ public class PlayerController : PawnController {
 		SetLocalPlayer ();
 	}
 
-//	public override void OnStartLocalPlayer () {
-//		InitializeTileLocation ();
-//		InitializeCamera ();
-//		SetInitialFacing ();
-//		SetLocalPlayer ();
-//	}
-		
 	protected override void Update ()	{
 		base.Update ();
 		SprintEnabled ();
@@ -36,7 +29,8 @@ public class PlayerController : PawnController {
 //		FindObstruction ();
 	}
 
-	void LateUpdate ()	{
+	protected override void LateUpdate ()	{
+		base.LateUpdate ();
 		FixCamera ();
 		FindObstruction ();
 		MouseOver ();

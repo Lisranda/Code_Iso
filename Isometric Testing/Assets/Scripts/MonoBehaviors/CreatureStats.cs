@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CreatureStats : MonoBehaviour {
+	[SerializeField] protected int speedNormal;
+	[SerializeField] protected int speedSprint;
+
 	[SerializeField] protected int healthMax;
 	[SerializeField] protected int manaMax;
 	[SerializeField] protected int healthCurrent;
@@ -15,4 +18,12 @@ public class CreatureStats : MonoBehaviour {
 	[SerializeField] protected int intelligence;
 	[SerializeField] protected int wisdom;
 	[SerializeField] protected int dexterity;
+
+	public int GetSpeedNormal () {
+		return speedNormal;
+	}
+
+	public int GetSpeedSprint () {
+		return speedSprint;
+	}
 }

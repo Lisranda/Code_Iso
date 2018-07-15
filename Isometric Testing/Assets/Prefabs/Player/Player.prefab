@@ -529,9 +529,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8717591324cabdd4f98ae8606e24c294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardinalSpeed: 5
+  cardinalSpeed: 0
   rotateSpeed: 720
   isMoving: 0
+  isSprinting: 0
   facingDirection: 0
   tileLocation: {fileID: 0}
   tileMoveTarget: {fileID: 0}
@@ -550,6 +551,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5aebad2556271e24b9e5d0b20711f342, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedNormal: 3
+  speedSprint: 8
   healthMax: 500
   manaMax: 500
   healthCurrent: 500
