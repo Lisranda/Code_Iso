@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class MonsterController : NPCController {
 	public LayerMask hostileTo;
@@ -20,10 +19,6 @@ public class MonsterController : NPCController {
 	}
 
 	protected override void Update () {
-		if (!isServer) {
-			return;
-		}
-
 		base.Update ();
 		MonsterAI ();
 	}

@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class Tile : NetworkBehaviour {
+public class Tile : MonoBehaviour {
 	public bool isWalkable = true;
-	[SyncVar] public bool isOccupied = false;
-	[SyncVar] public bool isReserved = false;
+	public bool isOccupied = false;
+	public bool isReserved = false;
 
 	public bool mouseOver = false;
 	public bool movementTarget = false;
@@ -28,32 +27,27 @@ public class Tile : NetworkBehaviour {
 
 	void LateUpdate () {
 		OccupyReserves ();
-
 		HighlightTile ();
 	}
 
 	void OccupyReserves () {
-		if (isServer) {
-			if (isReserved)
-				isOccupied = true;
-		}
+		if (isReserved)
+			isOccupied = true;
 	}
 		
-	void ReleaseOccupied () {
-		if (isServer) {			
-			RaycastHit hit;
-			Vector3 mod = new Vector3 (0f, -0.5f, 0f);
-			if (Physics.Raycast (transform.position + mod, Vector3.up, out hit, 5f)) {
-				GameObject go = hit.transform.gameObject;
-				if (go.GetComponent<PawnController> () != null) {
-					return;
-				} else if (go.GetComponent<PawnController> () == null && !isReserved) {
-					isOccupied = false;
-				}
-			} else if (!isReserved) {
+	void ReleaseOccupied () {		
+		RaycastHit hit;
+		Vector3 mod = new Vector3 (0f, -0.5f, 0f);
+		if (Physics.Raycast (transform.position + mod, Vector3.up, out hit, 5f)) {
+			GameObject go = hit.transform.gameObject;
+			if (go.GetComponent<PawnController> () != null) {
+				return;
+			} else if (go.GetComponent<PawnController> () == null && !isReserved) {
 				isOccupied = false;
-			}			
-		}
+			}
+		} else if (!isReserved) {
+			isOccupied = false;
+		}			
 	}
 
 	public void SetNeighbors () {

@@ -23,8 +23,6 @@ GameObject:
   - component: {fileID: 114904209534515430}
   - component: {fileID: 65015273950944270}
   - component: {fileID: 54340259286092220}
-  - component: {fileID: 114506442673327768}
-  - component: {fileID: 114556699099480250}
   m_Layer: 0
   m_Name: Creature
   m_TagString: Untagged
@@ -457,79 +455,6 @@ MonoBehaviour:
   targetHostile: {fileID: 0}
   targetHostileTile: {fileID: 0}
   attackHostileTile: {fileID: 0}
---- !u!114 &114506442673327768
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1550766794023314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 210
-    i1: 188
-    i2: 123
-    i3: 244
-    i4: 168
-    i5: 228
-    i6: 206
-    i7: 36
-    i8: 232
-    i9: 71
-    i10: 232
-    i11: 222
-    i12: 237
-    i13: 241
-    i14: 48
-    i15: 153
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
---- !u!114 &114556699099480250
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1550766794023314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9de747ec6d608d4b984ba2628a309b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interpolationBackTime: 0.1
-  extrapolationTimeLimit: 0.3
-  extrapolationDistanceLimit: 0.3
-  sendPositionThreshold: 0.001
-  sendRotationThreshold: 0.001
-  sendScaleThreshold: 0.001
-  sendVelocityThreshold: 0.001
-  sendAngularVelocityThreshold: 0.001
-  receivedPositionThreshold: 0
-  receivedRotationThreshold: 0
-  positionSnapThreshold: 8
-  rotationSnapThreshold: 60
-  scaleSnapThreshold: 3
-  positionLerpSpeed: 0.2
-  rotationLerpSpeed: 0.2
-  scaleLerpSpeed: 0.2
-  syncPosition: 0
-  syncRotation: 0
-  syncScale: 0
-  syncVelocity: 0
-  syncAngularVelocity: 0
-  isPositionCompressed: 1
-  isRotationCompressed: 1
-  isScaleCompressed: 1
-  isVelocityCompressed: 1
-  isAngularVelocityCompressed: 1
-  whereToUpdateTransform: 0
-  sendRate: 30
-  networkChannel: 1
-  childObjectToSync: {fileID: 0}
 --- !u!114 &114676071751676020
 MonoBehaviour:
   m_ObjectHideFlags: 1

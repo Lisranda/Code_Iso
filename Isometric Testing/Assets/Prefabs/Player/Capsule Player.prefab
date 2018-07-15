@@ -42,9 +42,6 @@ GameObject:
   - component: {fileID: 23503445483119178}
   - component: {fileID: 114563722135226346}
   - component: {fileID: 54365492443230406}
-  - component: {fileID: 114969627134511834}
-  - component: {fileID: 114765637257557424}
-  - component: {fileID: 114130392865682360}
   m_Layer: 8
   m_Name: Capsule Player
   m_TagString: Player
@@ -251,27 +248,6 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1933578518492866}
   m_Enabled: 0
---- !u!114 &114130392865682360
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1686183724709342}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
 --- !u!114 &114563722135226346
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -283,84 +259,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8717591324cabdd4f98ae8606e24c294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showForwardRay: 0
+  cardinalSpeed: 5
+  rotateSpeed: 720
+  isMoving: 0
   facingDirection: 0
   tileLocation: {fileID: 0}
-  tileTarget: {fileID: 0}
+  tileMoveTarget: {fileID: 0}
   cam: {fileID: 20437859207351358}
---- !u!114 &114765637257557424
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1686183724709342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9de747ec6d608d4b984ba2628a309b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interpolationBackTime: 0.1
-  extrapolationTimeLimit: 0.3
-  extrapolationDistanceLimit: 0.3
-  sendPositionThreshold: 0.001
-  sendRotationThreshold: 0.001
-  sendScaleThreshold: 0.001
-  sendVelocityThreshold: 0.001
-  sendAngularVelocityThreshold: 0.001
-  receivedPositionThreshold: 0
-  receivedRotationThreshold: 0
-  positionSnapThreshold: 8
-  rotationSnapThreshold: 90
-  scaleSnapThreshold: 3
-  positionLerpSpeed: 0.2
-  rotationLerpSpeed: 0.2
-  scaleLerpSpeed: 0.2
-  syncPosition: 0
-  syncRotation: 5
-  syncScale: 7
-  syncVelocity: 0
-  syncAngularVelocity: 0
-  isPositionCompressed: 1
-  isRotationCompressed: 1
-  isScaleCompressed: 1
-  isVelocityCompressed: 1
-  isAngularVelocityCompressed: 1
-  whereToUpdateTransform: 0
-  sendRate: 30
-  networkChannel: 0
-  childObjectToSync: {fileID: 0}
---- !u!114 &114969627134511834
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1686183724709342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 45
-    i1: 227
-    i2: 143
-    i3: 27
-    i4: 56
-    i5: 58
-    i6: 183
-    i7: 52
-    i8: 106
-    i9: 160
-    i10: 133
-    i11: 103
-    i12: 151
-    i13: 36
-    i14: 27
-    i15: 193
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
+  fadeLayers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!124 &124326702393141044
 Behaviour:
   m_ObjectHideFlags: 1

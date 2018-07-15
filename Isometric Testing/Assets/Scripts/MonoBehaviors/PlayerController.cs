@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class PlayerController : PawnController {
 
@@ -16,34 +15,32 @@ public class PlayerController : PawnController {
 	protected override void Start () {	
 		base.Start ();
 		oldFades = new List<GameObject> ();
-		DisableNonLocalCameras ();
-	}
-
-	public override void OnStartLocalPlayer () {
-//		InitializeTileLocation ();
 		InitializeCamera ();
-//		SetInitialFacing ();
 		SetLocalPlayer ();
 	}
+
+//	public override void OnStartLocalPlayer () {
+//		InitializeTileLocation ();
+//		InitializeCamera ();
+//		SetInitialFacing ();
+//		SetLocalPlayer ();
+//	}
 		
-	protected override void Update () {
+	protected override void Update ()	{
 		base.Update ();
-		if (isLocalPlayer) {
-			CmdOccupyTile (tileLocation);
-			MovementInput ();
-			MoveOnPath ();
-			RightClick ();
-//			FindObstruction ();
-		}
+		SprintEnabled ();
+		OccupyTile (tileLocation);
+		MovementInput ();
+		MoveOnPath ();
+		RightClick ();
+//		FindObstruction ();
 	}
 
-	void LateUpdate () {
-		if (isLocalPlayer) {
-			FixCamera ();
-			FindObstruction ();
-			MouseOver ();
-			MovementTarget ();
-		}
+	void LateUpdate ()	{
+		FixCamera ();
+		FindObstruction ();
+		MouseOver ();
+		MovementTarget ();
 	}
 
 	#endregion
@@ -100,12 +97,6 @@ public class PlayerController : PawnController {
 		cam.transform.position = transform.position - 30 * cam.transform.forward;
 	}
 
-	void DisableNonLocalCameras () {
-		if (!isLocalPlayer) {
-			cam.enabled = false;
-		}	
-	}
-
 	GameObject RayToTile () {
 		GameObject go;
 		RaycastHit hit;
@@ -141,6 +132,13 @@ public class PlayerController : PawnController {
 			MoveOrRotate (Facing.East, Vector3.forward);
 			tileMoveTarget = null;
 		}
+	}
+
+	void SprintEnabled () {
+		if (Input.GetKey ("left shift"))
+			isSprinting = true;
+		else
+			isSprinting = false;
 	}
 
 	void MouseOver () {

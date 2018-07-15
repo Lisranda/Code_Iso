@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class CameraController : NetworkBehaviour {
+public class CameraController : MonoBehaviour {
 	GameObject player;
 	Vector3 initialPosition;
 	Quaternion rotation;

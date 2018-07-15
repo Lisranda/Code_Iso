@@ -23,8 +23,6 @@ GameObject:
   - component: {fileID: 114778906721880072}
   - component: {fileID: 65049965251633596}
   - component: {fileID: 54114722308232698}
-  - component: {fileID: 114685357638618508}
-  - component: {fileID: 114235088789811526}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -234,47 +232,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _entityType: 0
---- !u!114 &114235088789811526
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1246398027981246}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9de747ec6d608d4b984ba2628a309b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interpolationBackTime: 0.1
-  extrapolationTimeLimit: 0.3
-  extrapolationDistanceLimit: 0.3
-  sendPositionThreshold: 0.001
-  sendRotationThreshold: 0.001
-  sendScaleThreshold: 0.001
-  sendVelocityThreshold: 0.001
-  sendAngularVelocityThreshold: 0.001
-  receivedPositionThreshold: 0
-  receivedRotationThreshold: 0
-  positionSnapThreshold: 8
-  rotationSnapThreshold: 60
-  scaleSnapThreshold: 3
-  positionLerpSpeed: 0.2
-  rotationLerpSpeed: 0.2
-  scaleLerpSpeed: 0.2
-  syncPosition: 0
-  syncRotation: 0
-  syncScale: 0
-  syncVelocity: 0
-  syncAngularVelocity: 0
-  isPositionCompressed: 1
-  isRotationCompressed: 1
-  isScaleCompressed: 1
-  isVelocityCompressed: 1
-  isAngularVelocityCompressed: 1
-  whereToUpdateTransform: 0
-  sendRate: 30
-  networkChannel: 1
-  childObjectToSync: {fileID: 0}
 --- !u!114 &114453706144526134
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -572,46 +529,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8717591324cabdd4f98ae8606e24c294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardinalSpeed: 5
+  rotateSpeed: 720
   isMoving: 0
   facingDirection: 0
   tileLocation: {fileID: 0}
-  tileTarget: {fileID: 0}
+  tileMoveTarget: {fileID: 0}
   cam: {fileID: 20068503315673376}
   fadeLayers:
     serializedVersion: 2
     m_Bits: 2048
---- !u!114 &114685357638618508
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1246398027981246}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 72
-    i1: 44
-    i2: 145
-    i3: 191
-    i4: 60
-    i5: 84
-    i6: 243
-    i7: 100
-    i8: 251
-    i9: 94
-    i10: 206
-    i11: 56
-    i12: 184
-    i13: 199
-    i14: 1
-    i15: 45
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
 --- !u!114 &114778906721880072
 MonoBehaviour:
   m_ObjectHideFlags: 1

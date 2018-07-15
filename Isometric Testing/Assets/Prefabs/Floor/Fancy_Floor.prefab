@@ -24,7 +24,6 @@ GameObject:
   - component: {fileID: 33426173270954828}
   - component: {fileID: 114043213645324408}
   - component: {fileID: 65360063438319294}
-  - component: {fileID: 114077223478570740}
   - component: {fileID: 114602939939972262}
   m_Layer: 0
   m_Name: Fancy_Floor
@@ -394,38 +393,6 @@ MonoBehaviour:
   - x: 19
     y: 18
   m_selectedTriangles: 100000001100000012000000110000001300000012000000
---- !u!114 &114077223478570740
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1248844458272474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 246
-    i1: 243
-    i2: 45
-    i3: 74
-    i4: 112
-    i5: 52
-    i6: 226
-    i7: 100
-    i8: 41
-    i9: 60
-    i10: 55
-    i11: 26
-    i12: 24
-    i13: 90
-    i14: 236
-    i15: 69
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
 --- !u!114 &114602939939972262
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -45,8 +45,6 @@ GameObject:
   - component: {fileID: 33399730305126874}
   - component: {fileID: 114015428105412460}
   - component: {fileID: 65773842995736940}
-  - component: {fileID: 114640534354658760}
-  - component: {fileID: 114093422375201592}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player
@@ -479,47 +477,6 @@ MonoBehaviour:
   m_selectedFaces: 
   m_SelectedEdges: []
   m_selectedTriangles: 
---- !u!114 &114093422375201592
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1237400063637420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9de747ec6d608d4b984ba2628a309b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interpolationBackTime: 0.1
-  extrapolationTimeLimit: 0.3
-  extrapolationDistanceLimit: 0.3
-  sendPositionThreshold: 0.001
-  sendRotationThreshold: 0.001
-  sendScaleThreshold: 0.001
-  sendVelocityThreshold: 0.001
-  sendAngularVelocityThreshold: 0.001
-  receivedPositionThreshold: 0
-  receivedRotationThreshold: 0
-  positionSnapThreshold: 8
-  rotationSnapThreshold: 60
-  scaleSnapThreshold: 3
-  positionLerpSpeed: 0.2
-  rotationLerpSpeed: 0.2
-  scaleLerpSpeed: 0.2
-  syncPosition: 0
-  syncRotation: 0
-  syncScale: 0
-  syncVelocity: 0
-  syncAngularVelocity: 0
-  isPositionCompressed: 1
-  isRotationCompressed: 1
-  isScaleCompressed: 1
-  isVelocityCompressed: 1
-  isAngularVelocityCompressed: 1
-  whereToUpdateTransform: 0
-  sendRate: 30
-  networkChannel: 1
-  childObjectToSync: {fileID: 0}
 --- !u!114 &114533097474303866
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -531,9 +488,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8717591324cabdd4f98ae8606e24c294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardinalSpeed: 5
+  rotateSpeed: 720
+  isMoving: 0
   facingDirection: 0
   tileLocation: {fileID: 0}
-  tileTarget: {fileID: 0}
+  tileMoveTarget: {fileID: 0}
   cam: {fileID: 20114900371726032}
   fadeLayers:
     serializedVersion: 2
@@ -560,38 +520,6 @@ MonoBehaviour:
   intelligence: 5
   wisdom: 5
   dexterity: 5
---- !u!114 &114640534354658760
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1237400063637420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 82
-    i1: 73
-    i2: 237
-    i3: 147
-    i4: 200
-    i5: 13
-    i6: 144
-    i7: 132
-    i8: 217
-    i9: 69
-    i10: 5
-    i11: 227
-    i12: 38
-    i13: 219
-    i14: 30
-    i15: 64
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
 --- !u!114 &114665841261446278
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class PawnController : NetworkBehaviour {
+public class PawnController : MonoBehaviour {
 	[SerializeField] protected float cardinalSpeed = 5f;
+	[SerializeField] protected float runCardinalSpeed = 8f;
+	[SerializeField] protected float currentCardinalSpeed;
 	[SerializeField] protected float rotateSpeed = 720f;
 	[SerializeField] protected bool isMoving = false;
+	[SerializeField] protected bool isSprinting = false;
 	protected enum Facing {North, East, South, West};
 	[SerializeField] protected Facing facingDirection = new Facing ();
 	[SerializeField] protected GameObject tileLocation;
@@ -17,9 +19,8 @@ public class PawnController : NetworkBehaviour {
 	}
 
 	protected virtual void Update () {
-		if (isServer) {
-			CmdOccupyTile (tileLocation);
-		}
+		SetSpeed ();
+		OccupyTile (tileLocation);
 	}
 
 	#region BFS PATHFINDING
@@ -53,15 +54,15 @@ public class PawnController : NetworkBehaviour {
 
 	#region COMMANDS
 
-	[Command] protected void CmdMakeReserved (GameObject tile) {
+	protected void MakeReserved (GameObject tile) {
 		tile.GetComponent<Tile> ().isReserved = true;
 	}
 
-	[Command] protected void CmdReleaseReserved (GameObject tile) {
+	protected void ReleaseReserved (GameObject tile) {
 		tile.GetComponent<Tile> ().isReserved = false;
 	}
 
-	[Command] protected void CmdOccupyTile (GameObject tile) {
+	protected void OccupyTile (GameObject tile) {
 		tile.GetComponent<Tile> ().isOccupied = true;
 	}
 
@@ -70,6 +71,7 @@ public class PawnController : NetworkBehaviour {
 	#region INITIALIZE PAWNS
 
 	protected void InitializePawn () {
+		currentCardinalSpeed = cardinalSpeed;
 		InitializeTileLocation ();
 		InitializeFacing ();
 	}
@@ -147,6 +149,13 @@ public class PawnController : NetworkBehaviour {
 
 	#region MOVEMENT & ROTATION
 
+	protected void SetSpeed () {
+		if (isSprinting)
+			currentCardinalSpeed = runCardinalSpeed;
+		else
+			currentCardinalSpeed = cardinalSpeed;
+	}
+
 	protected bool PathClear (GameObject targetGO) {
 		if (targetGO == null)
 			return false;
@@ -179,7 +188,7 @@ public class PawnController : NetworkBehaviour {
 
 	protected void InitiateMove (GameObject targetGO){
 		if (PathClear (targetGO)) {
-			CmdMakeReserved (targetGO);
+			MakeReserved (targetGO);
 			StartCoroutine (ExecuteMove (targetGO));
 		}	
 	}
@@ -197,11 +206,11 @@ public class PawnController : NetworkBehaviour {
 		isMoving = true;
 		Vector3 target = new Vector3 (targetGO.transform.position.x, tileLocation.transform.position.y, targetGO.transform.position.z);
 		while (transform.position != target) {
-			transform.position = Vector3.MoveTowards (transform.position, target, cardinalSpeed * Time.deltaTime);
+			transform.position = Vector3.MoveTowards (transform.position, target, currentCardinalSpeed * Time.deltaTime);
 			yield return null;
 		}
 		tileLocation = FindTileLocation (transform.position);
-		CmdReleaseReserved (tileLocation);
+		ReleaseReserved (tileLocation);
 		isMoving = false;
 	}
 
