@@ -25,7 +25,9 @@ public class PlayerController : PawnController {
 		OccupyTile (tileLocation);
 		MovementInput ();
 		MoveOnPath ();
+		Attack ();
 		RightClick ();
+		CheckForAttack ();
 //		FindObstruction ();
 	}
 
@@ -133,6 +135,18 @@ public class PlayerController : PawnController {
 			isSprinting = true;
 		else
 			isSprinting = false;
+	}
+
+	void Attack () {
+		if (Input.GetKey ("q") && !isAttacking) {
+			AnimateAttack ();
+			tileMoveTarget = null;
+		}
+	}
+
+	void CheckForAttack () {
+		if (!gameObject.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0).IsName ("ATTACK"))
+			isAttacking = false;
 	}
 
 	void MouseOver () {

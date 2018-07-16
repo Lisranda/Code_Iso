@@ -7,6 +7,7 @@ public class PawnController : MonoBehaviour {
 	[SerializeField] protected float rotateSpeed = 720f;
 	[SerializeField] protected bool isMoving = false;
 	[SerializeField] protected bool isSprinting = false;
+	[SerializeField] protected bool isAttacking = false;
 	protected enum Facing {North, East, South, West};
 	[SerializeField] protected Facing facingDirection = new Facing ();
 	[SerializeField] protected GameObject tileLocation;
@@ -180,7 +181,7 @@ public class PawnController : MonoBehaviour {
 	}
 
 	protected void MoveOrRotate (Facing face, Vector3 direction) {
-		if (isMoving)
+		if (isMoving || isAttacking)
 			return;
 
 		int arrayRef = GetNeighborArrayRef (direction);
@@ -228,6 +229,11 @@ public class PawnController : MonoBehaviour {
 			gameObject.GetComponent<Animator> ().SetFloat ("Speed", 0.25f);
 		else
 			gameObject.GetComponent<Animator> ().SetFloat ("Speed", 0f);
+	}
+
+	protected void AnimateAttack () {
+		isAttacking = true;
+		gameObject.GetComponent<Animator> ().SetTrigger ("Attack");
 	}
 
 	protected IEnumerator ExecuteRotate (Vector3 targetDirection) {
