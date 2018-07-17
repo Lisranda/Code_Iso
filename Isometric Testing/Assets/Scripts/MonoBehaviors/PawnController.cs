@@ -26,6 +26,9 @@ public class PawnController : MonoBehaviour {
 		AnimateMoving ();
 	}
 
+	protected virtual void FixedUpdate () {
+	}
+
 	#region BFS PATHFINDING
 
 	protected void MoveOnPath () {
@@ -112,6 +115,18 @@ public class PawnController : MonoBehaviour {
 		return null;
 	}
 
+	protected Vector3 GetForwardVector3 () {
+		if (facingDirection == Facing.North)
+			return Vector3.left;
+		if (facingDirection == Facing.South)
+			return Vector3.right;
+		if (facingDirection == Facing.West)
+			return Vector3.back;
+		if (facingDirection == Facing.East)
+			return Vector3.forward;
+		return Vector3.zero;
+	}
+
 	#endregion
 
 	#region MOVEMENT HELPERS
@@ -180,8 +195,12 @@ public class PawnController : MonoBehaviour {
 		return true;
 	}
 
+	protected bool IsAttacking () {		
+		return gameObject.GetComponent<Animator> ().GetBool ("AttackBool");
+	}
+
 	protected void MoveOrRotate (Facing face, Vector3 direction) {
-		if (isMoving || isAttacking)
+		if (isMoving || IsAttacking ())
 			return;
 
 		int arrayRef = GetNeighborArrayRef (direction);
@@ -232,7 +251,6 @@ public class PawnController : MonoBehaviour {
 	}
 
 	protected void AnimateAttack () {
-		isAttacking = true;
 		gameObject.GetComponent<Animator> ().SetTrigger ("Attack");
 	}
 

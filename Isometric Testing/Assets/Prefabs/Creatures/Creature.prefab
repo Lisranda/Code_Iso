@@ -8,15 +8,15 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications: []
     m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 0}
+  m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1550766794023314}
-  m_IsPrefabParent: 1
+  m_IsPrefabAsset: 1
 --- !u!1 &1550766794023314
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
+  serializedVersion: 6
   m_Component:
   - component: {fileID: 4889508769158916}
   - component: {fileID: 114233794605650042}
@@ -33,9 +33,9 @@ GameObject:
 --- !u!1 &1775047106620450
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
+  serializedVersion: 6
   m_Component:
   - component: {fileID: 4266617562261578}
   - component: {fileID: 114676071751676020}
@@ -52,7 +52,7 @@ GameObject:
 --- !u!4 &4266617562261578
 Transform:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1775047106620450}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
@@ -65,7 +65,7 @@ Transform:
 --- !u!4 &4889508769158916
 Transform:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1550766794023314}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
@@ -79,7 +79,7 @@ Transform:
 --- !u!23 &23087192524855316
 MeshRenderer:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1775047106620450}
   m_Enabled: 1
@@ -89,6 +89,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 588ad048240c4244ea7236cf7373089a, type: 2}
   m_StaticBatchInfo:
@@ -113,14 +114,14 @@ MeshRenderer:
 --- !u!33 &33040793239200652
 MeshFilter:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1775047106620450}
   m_Mesh: {fileID: 0}
 --- !u!54 &54340259286092220
 Rigidbody:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1550766794023314}
   serializedVersion: 2
@@ -135,7 +136,7 @@ Rigidbody:
 --- !u!65 &65015273950944270
 BoxCollider:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1550766794023314}
   m_Material: {fileID: 0}
@@ -147,7 +148,7 @@ BoxCollider:
 --- !u!114 &114031798258814392
 MonoBehaviour:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1775047106620450}
   m_Enabled: 1
@@ -433,7 +434,7 @@ MonoBehaviour:
 --- !u!114 &114233794605650042
 MonoBehaviour:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1550766794023314}
   m_Enabled: 1
@@ -445,6 +446,7 @@ MonoBehaviour:
   rotateSpeed: 720
   isMoving: 0
   isSprinting: 0
+  isAttacking: 0
   facingDirection: 0
   tileLocation: {fileID: 0}
   tileMoveTarget: {fileID: 0}
@@ -459,7 +461,7 @@ MonoBehaviour:
 --- !u!114 &114676071751676020
 MonoBehaviour:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1775047106620450}
   m_Enabled: 1
@@ -471,7 +473,7 @@ MonoBehaviour:
 --- !u!114 &114904209534515430
 MonoBehaviour:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1550766794023314}
   m_Enabled: 1
@@ -479,16 +481,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa7a52df40e9ada488ab76d2f510a6e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityType: 2
   speedNormal: 3
   speedSprint: 5
-  healthMax: 100
+  attackDamage: 1
+  healthMax: 10
   manaMax: 0
-  healthCurrent: 100
+  healthCurrent: 10
   manaCurrent: 0
-  healthRegenRate: 10
+  healthRegenRate: 1
   manaRegenRate: 0
   strength: 0
   constitution: 0
   intelligence: 0
   wisdom: 0
   dexterity: 0
+  globalResist: 0
+  physicalResist: 0
+  magicalResist: 0
+  fireResist: 0
+  waterResist: 0
+  earthResist: 0
+  airResist: 0
+  lightResist: 0
+  darkResist: 0

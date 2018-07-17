@@ -26,8 +26,8 @@ public class PlayerController : PawnController {
 		MovementInput ();
 		MoveOnPath ();
 		Attack ();
+
 		RightClick ();
-		CheckForAttack ();
 //		FindObstruction ();
 	}
 
@@ -37,6 +37,10 @@ public class PlayerController : PawnController {
 		FindObstruction ();
 		MouseOver ();
 		MovementTarget ();
+	}
+
+	protected override void FixedUpdate () {
+		
 	}
 
 	#endregion
@@ -106,25 +110,36 @@ public class PlayerController : PawnController {
 		return null;
 	}
 
+	GameObject RayForward () {
+		GameObject go;
+		RaycastHit hit;
+		Vector3 mod = new Vector3 (0f, 0.5f, 0f);
+		if (Physics.Raycast (transform.position + mod, GetForwardVector3 (), out hit, 1f)) {
+			go = hit.transform.gameObject;
+			return go;
+		}
+		return null;
+	}
+
 	#endregion
 
 	#region INPUTS
 
 	void MovementInput ()
 	{
-		if (Input.GetKey ("w") && !Input.GetKey ("s") && !Input.GetKey ("a") && !Input.GetKey ("d")) {
+		if (Input.GetKey ("w") && !Input.GetKey ("s") && !Input.GetKey ("a") && !Input.GetKey ("d") && !Input.GetKey ("q")) {
 			MoveOrRotate (Facing.North, Vector3.left);
 			tileMoveTarget = null;
 		}
-		if (Input.GetKey ("s") && !Input.GetKey ("w") && !Input.GetKey ("a") && !Input.GetKey ("d")) {
+		if (Input.GetKey ("s") && !Input.GetKey ("w") && !Input.GetKey ("a") && !Input.GetKey ("d") && !Input.GetKey ("q")) {
 			MoveOrRotate (Facing.South, Vector3.right);
 			tileMoveTarget = null;
 		}
-		if (Input.GetKey ("a") && !Input.GetKey ("d") && !Input.GetKey ("w") && !Input.GetKey ("s")) {
+		if (Input.GetKey ("a") && !Input.GetKey ("d") && !Input.GetKey ("w") && !Input.GetKey ("s") && !Input.GetKey ("q")) {
 			MoveOrRotate (Facing.West, Vector3.back);
 			tileMoveTarget = null;
 		}
-		if (Input.GetKey ("d") && !Input.GetKey ("a") && !Input.GetKey ("w") && !Input.GetKey ("s")) {
+		if (Input.GetKey ("d") && !Input.GetKey ("a") && !Input.GetKey ("w") && !Input.GetKey ("s") && !Input.GetKey ("q")) {
 			MoveOrRotate (Facing.East, Vector3.forward);
 			tileMoveTarget = null;
 		}
@@ -138,15 +153,13 @@ public class PlayerController : PawnController {
 	}
 
 	void Attack () {
-		if (Input.GetKey ("q") && !isAttacking) {
+		if (Input.GetKey ("q") && !IsAttacking ()) {
+			gameObject.GetComponent<Animator> ().SetBool ("AttackBool", true);
 			AnimateAttack ();
 			tileMoveTarget = null;
+			Debug.Log ("Attacking");
+//			RayForward ();
 		}
-	}
-
-	void CheckForAttack () {
-		if (!gameObject.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0).IsName ("ATTACK"))
-			isAttacking = false;
 	}
 
 	void MouseOver () {
