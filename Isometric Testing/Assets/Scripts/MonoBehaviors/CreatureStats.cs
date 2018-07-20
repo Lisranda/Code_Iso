@@ -6,25 +6,36 @@ public enum DamageTypes { Physical, Fire, Water, Earth, Air, Light, Dark, True }
 public enum EntityTypes { Player, NPC, Monster };
 
 public class CreatureStats : MonoBehaviour {
+	[Header("Entity Type")]
 	[SerializeField] protected EntityTypes entityType;
+
+	[Header("Speeds")]
 	[SerializeField] protected int speedNormal;
 	[SerializeField] protected int speedSprint;
 
+	[Header("Attack Damage")]
 	[SerializeField] protected float attackDamage;
 
+	[Header("Max HP/MP")]
 	[SerializeField] protected int healthMax;
 	[SerializeField] protected int manaMax;
+
+	[Header("Current HP/MP")]
 	[SerializeField] protected int healthCurrent;
 	[SerializeField] protected int manaCurrent;
+
+	[Header("Regen Rates")]
 	[SerializeField] protected int healthRegenRate;
 	[SerializeField] protected int manaRegenRate;
 
+	[Header("Attributes")]
 	[SerializeField] protected int strength;
 	[SerializeField] protected int constitution;
 	[SerializeField] protected int intelligence;
 	[SerializeField] protected int wisdom;
 	[SerializeField] protected int dexterity;
 
+	[Header("Resists")]
 	[SerializeField] protected float globalResist;
 	[SerializeField] protected float physicalResist;
 	[SerializeField] protected float magicalResist;

@@ -115,7 +115,7 @@ public class PawnController : MonoBehaviour {
 		return null;
 	}
 
-	protected Vector3 GetForwardVector3 () {
+	public Vector3 GetForwardVector3 () {
 		if (facingDirection == Facing.North)
 			return Vector3.left;
 		if (facingDirection == Facing.South)
