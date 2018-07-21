@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 703480d39f4222e43a5286ccdbbc7e66, type: 3}
-  m_Name: New Weapon
+  m_Name: New Weapon 1
   m_EditorClassIdentifier: 
   itemName: New Weapon
   itemIcon: {fileID: 0}
@@ -19,4 +19,4 @@ MonoBehaviour:
   equipmentType: 1
   armorValue: 0
   attackDamage: 0
-  weaponSlot: 1
+  weaponSlot: 3

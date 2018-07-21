@@ -12,6 +12,7 @@ public class PawnController : MonoBehaviour {
 	[SerializeField] protected Facing facingDirection = new Facing ();
 	[SerializeField] protected GameObject tileLocation;
 	[SerializeField] protected GameObject tileMoveTarget;
+	[SerializeField] protected LayerMask floorLayerMask;
 
 	protected virtual void Start () {
 		InitializePawn ();
@@ -109,22 +110,10 @@ public class PawnController : MonoBehaviour {
 		RaycastHit hit;
 		Vector3 mod = new Vector3 (0f, 0.5f, 0f);
 
-		if (Physics.Raycast (location + mod, Vector3.down, out hit, 1f)) {
+		if (Physics.Raycast (location + mod, Vector3.down, out hit, 1f, floorLayerMask)) {
 			return hit.transform.gameObject;
 		}
 		return null;
-	}
-
-	public Vector3 GetForwardVector3 () {
-		if (facingDirection == Facing.North)
-			return Vector3.left;
-		if (facingDirection == Facing.South)
-			return Vector3.right;
-		if (facingDirection == Facing.West)
-			return Vector3.back;
-		if (facingDirection == Facing.East)
-			return Vector3.forward;
-		return Vector3.zero;
 	}
 
 	#endregion

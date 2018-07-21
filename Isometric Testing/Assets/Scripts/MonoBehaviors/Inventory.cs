@@ -3,21 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour {
-	PawnController controller;
+	Equipped equipped;
 	public List<Item> items = new List<Item>();
 
 	public int inventorySize = 10;
 
 	void Awake () {
-		controller = GetComponentInParent<PawnController> ();
+		equipped = GetComponentInParent<Equipped> ();
 	}
 
 	void Update () {
 		DetectInput ();
+//		AutoEquipDebug ();
 	}
 
-	public void Add (Item item) {
-		items.Add (item);
+	void AutoEquipDebug () {
+		if (items.Count > 0) {
+			if (items [0] != null) {
+				if (items [0].GetType ().ToString() == "Weapon") {
+					equipped.Equip ((Weapon)items [0]);
+					Remove (items [0]);
+					return;
+				}
+				if (items [0].GetType ().ToString() == "Armor") {
+					equipped.Equip ((Armor)items [0]);
+					Remove (items [0]);
+					return;
+				}
+			}
+		}
+	}
+
+	public bool Add (Item item) {
+		if (items.Count < inventorySize) {
+			items.Add (item);
+			Debug.Log ("Added " + item.itemName);
+			return true;
+		} else {
+			Debug.Log ("Inventory Full");
+			return false;
+		}			
 	}
 
 	public void Remove (Item item) {
@@ -32,17 +57,14 @@ public class Inventory : MonoBehaviour {
 	void Pickup () {
 		RaycastHit hit;
 		Vector3 mod = new Vector3 (0f, 0.1f, 0f);
-		if (Physics.Raycast (transform.position + mod, controller.GetForwardVector3 (), out hit, 1f)) {			
+		if (Physics.Raycast (transform.position + mod, transform.forward, out hit, 1f)) {			
 			if (hit.transform.gameObject.GetComponentInParent<ItemInteraction> () != null) {
-				if (items.Count < inventorySize) {
+				
 					GameObject go = hit.transform.gameObject;
 					Item item = go.GetComponentInParent<ItemInteraction> ().item;
-					Add (item);
-					Destroy (go);
-					Debug.Log ("Added " + item.itemName);
-
-				} else
-					Debug.Log ("Inventory Full");
+				if (Add (item)) {
+					Destroy (go);					
+				}
 			}
 		} else
 			Debug.Log ("Tried to pick up, but nothing found.");

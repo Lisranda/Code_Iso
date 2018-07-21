@@ -8,15 +8,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 703480d39f4222e43a5286ccdbbc7e66, type: 3}
-  m_Name: New Weapon
+  m_Script: {fileID: 11500000, guid: 24b1ef651de3845478ce9a3ce4e0245f, type: 3}
+  m_Name: New Armor 2
   m_EditorClassIdentifier: 
-  itemName: New Weapon
+  itemName: New Armor
   itemIcon: {fileID: 0}
   itemValue: 0
   itemStackSize: 1
   itemType: 0
-  equipmentType: 1
+  equipmentType: 0
   armorValue: 0
   attackDamage: 0
-  weaponSlot: 1
+  armorSlot: 8

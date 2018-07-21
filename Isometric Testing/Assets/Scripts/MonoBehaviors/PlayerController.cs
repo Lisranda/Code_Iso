@@ -110,17 +110,6 @@ public class PlayerController : PawnController {
 		return null;
 	}
 
-	GameObject RayForward () {
-		GameObject go;
-		RaycastHit hit;
-		Vector3 mod = new Vector3 (0f, 0.5f, 0f);
-		if (Physics.Raycast (transform.position + mod, GetForwardVector3 (), out hit, 1f)) {
-			go = hit.transform.gameObject;
-			return go;
-		}
-		return null;
-	}
-
 	#endregion
 
 	#region INPUTS

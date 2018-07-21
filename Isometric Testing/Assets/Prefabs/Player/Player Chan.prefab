@@ -1777,8 +1777,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4062838796171378}
   - component: {fileID: 95067586089195486}
-  - component: {fileID: 114012694034800878}
   - component: {fileID: 114546970763427192}
+  - component: {fileID: 114875844201473550}
+  - component: {fileID: 114700190738626484}
+  - component: {fileID: 114012694034800878}
+  - component: {fileID: 65987280670206082}
   m_Layer: 8
   m_Name: Player Chan
   m_TagString: Player
@@ -3763,7 +3766,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1729317558816212}
   m_LocalRotation: {x: 0.08717229, y: -0.89959055, z: 0.21045253, w: 0.3726226}
-  m_LocalPosition: {x: 14.01173, y: 13.308207, z: 18.01173}
+  m_LocalPosition: {x: 19.01173, y: 13.308208, z: 19.01173}
   m_LocalScale: {x: 0.9333304, y: 0.9868798, z: 0.9464506}
   m_Children: []
   m_Father: {fileID: 4062838796171378}
@@ -5123,6 +5126,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1020346800471262}
   m_Mesh: {fileID: 4300000, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
+--- !u!65 &65987280670206082
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1676572990731442}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.25, y: 1.5, z: 0.25}
+  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!81 &81399481592750036
 AudioListener:
   m_ObjectHideFlags: 1
@@ -5202,10 +5217,52 @@ MonoBehaviour:
   facingDirection: 0
   tileLocation: {fileID: 0}
   tileMoveTarget: {fileID: 0}
+  floorLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
   cam: {fileID: 20086800987994142}
   fadeLayers:
     serializedVersion: 2
     m_Bits: 2048
+--- !u!114 &114700190738626484
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1676572990731442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27f37aba7ba6f8248a47017994655e35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  armorSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  weaponSlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &114875844201473550
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1676572990731442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8789bdd8ae1df1a4f8fe19d716c15dba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  items: []
+  inventorySize: 10
 --- !u!124 &124498756976599428
 Behaviour:
   m_ObjectHideFlags: 1
