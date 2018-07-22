@@ -101,7 +101,7 @@ public class PlayerController : PawnController {
 		GameObject go;
 		RaycastHit hit;
 		Ray ray = cam.ScreenPointToRay (Input.mousePosition);
-		if (Physics.Raycast (ray, out hit, 50, ~(1 << 11))) {
+		if (Physics.Raycast (ray, out hit, 50, floorLayerMask)) {
 			go = hit.transform.gameObject;
 			if (go.GetComponent<Tile> () != null) {
 				return go;				

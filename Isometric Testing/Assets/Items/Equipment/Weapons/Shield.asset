@@ -9,14 +9,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 703480d39f4222e43a5286ccdbbc7e66, type: 3}
-  m_Name: New Weapon
+  m_Name: Shield
   m_EditorClassIdentifier: 
-  itemName: New Weapon
+  itemName: Shield
   itemIcon: {fileID: 0}
   itemValue: 0
   itemStackSize: 1
   itemType: 0
   equipmentType: 1
-  armorValue: 0
-  attackDamage: 0
-  weaponSlot: 1
+  armorValue: 500
+  damageModifier: 0
+  healthFlat: 0
+  healthModifier: 0
+  manaFlat: 0
+  manaModifier: 0
+  flatSTR: 0
+  flatCON: 0
+  flatINT: 0
+  flatWIS: 0
+  flatDEX: 0
+  magicalResist: 0
+  weaponSlot: 3
+  weaponDamage: 0

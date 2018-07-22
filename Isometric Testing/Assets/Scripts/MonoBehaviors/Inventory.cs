@@ -14,7 +14,7 @@ public class Inventory : MonoBehaviour {
 
 	void Update () {
 		DetectInput ();
-//		AutoEquipDebug ();
+		AutoEquipDebug ();
 	}
 
 	void AutoEquipDebug () {

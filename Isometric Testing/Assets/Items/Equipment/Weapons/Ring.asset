@@ -9,14 +9,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24b1ef651de3845478ce9a3ce4e0245f, type: 3}
-  m_Name: New Armor 1
+  m_Name: Ring
   m_EditorClassIdentifier: 
-  itemName: New Armor
+  itemName: Ring
   itemIcon: {fileID: 0}
   itemValue: 0
   itemStackSize: 1
   itemType: 0
   equipmentType: 0
   armorValue: 0
-  attackDamage: 0
-  armorSlot: 2
+  damageModifier: 0
+  healthFlat: 500
+  healthModifier: 0
+  manaFlat: 500
+  manaModifier: 0
+  flatSTR: 1
+  flatCON: 1
+  flatINT: 1
+  flatWIS: 1
+  flatDEX: 1
+  magicalResist: 0
+  armorSlot: 8

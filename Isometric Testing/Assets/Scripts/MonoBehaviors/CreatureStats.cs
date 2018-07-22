@@ -12,28 +12,48 @@ public class CreatureStats : MonoBehaviour {
 	[Header("Speeds")]
 	[SerializeField] protected int speedNormal;
 	[SerializeField] protected int speedSprint;
+	[SerializeField] protected float speedModifier;
 
-	[Header("Attack Damage")]
-	[SerializeField] protected float attackDamage;
+	[Header("Combat")]
+	[SerializeField] protected int armorValue;
+	[SerializeField] protected float damageModifier;
 
-	[Header("Max HP/MP")]
+	[Header("Health")]
+	[SerializeField] protected int healthBase;
+	[SerializeField] protected int healthBonusFlat;
+	[SerializeField] protected float healthBonusModifier;
 	[SerializeField] protected int healthMax;
-	[SerializeField] protected int manaMax;
-
-	[Header("Current HP/MP")]
 	[SerializeField] protected int healthCurrent;
-	[SerializeField] protected int manaCurrent;
-
-	[Header("Regen Rates")]
 	[SerializeField] protected int healthRegenRate;
+
+	[Header("Mana")]
+	[SerializeField] protected int manaBase;
+	[SerializeField] protected int manaBonusFlat;
+	[SerializeField] protected float manaBonusModifier;
+	[SerializeField] protected int manaMax;
+	[SerializeField] protected int manaCurrent;
 	[SerializeField] protected int manaRegenRate;
 
-	[Header("Attributes")]
-	[SerializeField] protected int strength;
-	[SerializeField] protected int constitution;
-	[SerializeField] protected int intelligence;
-	[SerializeField] protected int wisdom;
-	[SerializeField] protected int dexterity;
+	[Header("Base Attributes")]
+	[SerializeField] protected int baseStrength;
+	[SerializeField] protected int baseConstitution;
+	[SerializeField] protected int baseIntelligence;
+	[SerializeField] protected int baseWisdom;
+	[SerializeField] protected int baseDexterity;
+
+	[Header("Attribute Modifiers")]
+	[SerializeField] protected int modStrength;
+	[SerializeField] protected int modConstitution;
+	[SerializeField] protected int modIntelligence;
+	[SerializeField] protected int modWisdom;
+	[SerializeField] protected int modDexterity;
+
+	[Header("Current Attributes")]
+	[SerializeField] protected int currentStrength;
+	[SerializeField] protected int currentConstitution;
+	[SerializeField] protected int currentIntelligence;
+	[SerializeField] protected int currentWisdom;
+	[SerializeField] protected int currentDexterity;
 
 	[Header("Resists")]
 	[SerializeField] protected float globalResist;
@@ -45,6 +65,34 @@ public class CreatureStats : MonoBehaviour {
 	[SerializeField] protected float airResist;
 	[SerializeField] protected float lightResist;
 	[SerializeField] protected float darkResist;
+
+	void Start () {
+		
+	}
+
+	public void UpdateStats (int armorVal, float damageMod, int hpFlat, float hpMod, int mpFlat, float mpMod, int flatSTR, int flatCON, int flatINT, int flatWIS, int flatDEX, float magicalRes) {
+		armorValue = armorVal;
+		damageModifier = damageMod;
+		healthBonusFlat = hpFlat;
+		healthBonusModifier = hpMod;
+		manaBonusFlat = mpFlat;
+		manaBonusModifier = mpMod;
+		modStrength = flatSTR;
+		modConstitution = flatCON;
+		modIntelligence = flatINT;
+		modWisdom = flatWIS;
+		modDexterity = flatDEX;
+		magicalResist = magicalRes;
+
+		healthMax = Mathf.RoundToInt ((healthBase + healthBonusFlat) * (1f + healthBonusModifier));
+		manaMax = Mathf.RoundToInt ((manaBase + manaBonusFlat) * (1f + manaBonusModifier));
+
+		currentStrength = baseStrength + modStrength;
+		currentConstitution = baseConstitution + modConstitution;
+		currentIntelligence = baseIntelligence + modIntelligence;
+		currentWisdom = baseWisdom + modWisdom;
+		currentDexterity = baseDexterity + modDexterity;
+	}
 
 	public int GetSpeedNormal () {
 		return speedNormal;

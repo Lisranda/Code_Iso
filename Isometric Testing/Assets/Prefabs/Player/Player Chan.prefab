@@ -5177,18 +5177,36 @@ MonoBehaviour:
   entityType: 0
   speedNormal: 5
   speedSprint: 8
-  attackDamage: 2
-  healthMax: 100
-  manaMax: 100
-  healthCurrent: 100
-  manaCurrent: 100
+  speedModifier: 0
+  armorValue: 0
+  damageModifier: 0
+  healthBase: 100
+  healthBonusFlat: 0
+  healthBonusModifier: 0
+  healthMax: 0
+  healthCurrent: 0
   healthRegenRate: 5
+  manaBase: 100
+  manaBonusFlat: 0
+  manaBonusModifier: 0
+  manaMax: 0
+  manaCurrent: 0
   manaRegenRate: 5
-  strength: 0
-  constitution: 0
-  intelligence: 0
-  wisdom: 0
-  dexterity: 0
+  baseStrength: 1
+  baseConstitution: 1
+  baseIntelligence: 1
+  baseWisdom: 1
+  baseDexterity: 1
+  modStrength: 0
+  modConstitution: 0
+  modIntelligence: 0
+  modWisdom: 0
+  modDexterity: 0
+  currentStrength: 0
+  currentConstitution: 0
+  currentIntelligence: 0
+  currentWisdom: 0
+  currentDexterity: 0
   globalResist: 0
   physicalResist: 0
   magicalResist: 0
@@ -5236,6 +5254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   armorSlots:
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ItemType { Equipment, Other };
 public enum EquipmentType { Armor, Weapon, Bag };
-public enum ArmorSlot { Head, Chest, Legs, Hands, Feet, Wrists, Ears, Neck, Fingers };
+public enum ArmorSlot { Head, Chest, Legs, Hands, Feet, Wrists, Ears, Neck, Fingers, Waist };
 public enum WeaponSlot { TwoHand, MainHand, OneHand, OffHand, Ranged };
 
 public class Item : ScriptableObject {

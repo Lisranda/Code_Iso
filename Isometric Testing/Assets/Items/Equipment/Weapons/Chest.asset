@@ -9,13 +9,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24b1ef651de3845478ce9a3ce4e0245f, type: 3}
-  m_Name: New Armor
+  m_Name: Chest
   m_EditorClassIdentifier: 
-  itemName: New Armor
+  itemName: Chest
   itemIcon: {fileID: 0}
   itemValue: 0
+  itemStackSize: 1
   itemType: 0
-  armorValue: 0
-  attackDamage: 0
   equipmentType: 0
-  armorSlot: 0
+  armorValue: 200
+  damageModifier: 0
+  healthFlat: 0
+  healthModifier: 0
+  manaFlat: 0
+  manaModifier: 0
+  flatSTR: 0
+  flatCON: 0
+  flatINT: 0
+  flatWIS: 0
+  flatDEX: 0
+  magicalResist: 0
+  armorSlot: 1
