@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: Ring
   m_EditorClassIdentifier: 
   itemName: Ring
-  itemIcon: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: 970324311431c794ca338446ea889948, type: 3}
   itemValue: 0
   itemStackSize: 1
   itemType: 0

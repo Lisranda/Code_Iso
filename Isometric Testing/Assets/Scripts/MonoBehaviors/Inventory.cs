@@ -12,9 +12,15 @@ public class Inventory : MonoBehaviour {
 		equipped = GetComponentInParent<Equipped> ();
 	}
 
+	void Start () {
+		for (int i = 0; i < inventorySize; i++) {
+			items.Add (null);
+		}
+	}
+
 	void Update () {
 		DetectInput ();
-		AutoEquipDebug ();
+//		AutoEquipDebug ();
 	}
 
 	void AutoEquipDebug () {
@@ -35,14 +41,29 @@ public class Inventory : MonoBehaviour {
 	}
 
 	public bool Add (Item item) {
-		if (items.Count < inventorySize) {
-			items.Add (item);
-			Debug.Log ("Added " + item.itemName);
-			return true;
-		} else {
-			Debug.Log ("Inventory Full");
-			return false;
-		}			
+		for (int i = 0; i < inventorySize; i++) {
+			if (items [i] != null) {
+				if (i == inventorySize - 1) {
+					Debug.Log ("Inventory Full");
+					return false;
+				}
+				continue;
+			}
+
+			items [i] = item;
+			break;
+		}
+		return true;
+
+//		if (items.Count < inventorySize) {
+//			items.Add (item);
+//			Debug.Log ("Added " + item.itemName);
+//			return true;
+//		} else {
+//			Debug.Log ("Inventory Full");
+//			return false;
+//		}	
+
 	}
 
 	public void Remove (Item item) {
