@@ -19,7 +19,7 @@ public class Inventory : MonoBehaviour {
 
 	void Update () {
 		DetectInput ();
-		AutoEquipDebug ();
+//		AutoEquipDebug ();
 	}
 
 	void InitializeInventory () {
@@ -29,20 +29,12 @@ public class Inventory : MonoBehaviour {
 	}
 
 	void AutoEquipDebug () {
-		if (items.Count > 0) {
-			if (items [0] != null) {
-				if (items [0].GetType ().ToString() == "Weapon") {
-					equipped.Equip ((Weapon)items [0]);
-					Remove (items [0]);
-					return;
-				}
-				if (items [0].GetType ().ToString() == "Armor") {
-					equipped.Equip ((Armor)items [0]);
-					Remove (items [0]);
-					return;
-				}
-			}
-		}
+		if (items.Count < 1)
+			return;
+		if (items [0] == null)
+			return;
+		if (equipped.Equip (items [0]))
+			Remove (items [0]);
 	}
 
 	public bool Add (Item item) {
@@ -59,20 +51,11 @@ public class Inventory : MonoBehaviour {
 			break;
 		}
 		return true;
-
-//		if (items.Count < inventorySize) {
-//			items.Add (item);
-//			Debug.Log ("Added " + item.itemName);
-//			return true;
-//		} else {
-//			Debug.Log ("Inventory Full");
-//			return false;
-//		}	
-
 	}
 
 	public void Remove (Item item) {
-		items.Remove (item);
+		int index = (items.IndexOf (item));
+		items [index] = null;
 	}
 
 	void DetectInput () {

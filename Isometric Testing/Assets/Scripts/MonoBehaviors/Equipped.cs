@@ -11,7 +11,6 @@ public class Equipped : MonoBehaviour {
 	public Item [] equippedItems = new Item [14];
 
 	[Header("Armor Slots")]
-	[SerializeField] Armor[] armorSlots = new Armor[11];
 	int headRef = 0;
 	int chestRef = 1;
 	int handsRef = 2;
@@ -25,10 +24,9 @@ public class Equipped : MonoBehaviour {
 	int rightFingerRef = 10;
 
 	[Header("Weapon Slots")]
-	[SerializeField] Weapon[] weaponSlots = new Weapon[3];
-	int mainHandRef = 0;
-	int offHandRef = 1;
-	int rangedRef = 2;
+	int mainHandRef = 11;
+	int offHandRef = 12;
+	int rangedRef = 13;
 
 	public delegate void OneEquipmentChange ();
 	public OneEquipmentChange onEquipmentChangeCallback;
@@ -37,87 +35,65 @@ public class Equipped : MonoBehaviour {
 		inventory = GetComponentInParent<Inventory> ();
 		stats = GetComponentInParent<CreatureStats> ();
 		onEquipmentChangeCallback += CalculateEquipmentBonuses;
-		onEquipmentChangeCallback += UpdateItemsArray;
 	}
 
 	void Start () {
 		CalculateEquipmentBonuses ();
-		UpdateItemsArray ();
-	}
+	}		
 
-	void UpdateItemsArray () {
-		for (int i = 0; i < armorSlots.Length; i++) {
-			equippedItems [i] = (Item)armorSlots [i];
-		}
-		for (int i = 0; i < weaponSlots.Length; i++) {
-			equippedItems [i + armorSlots.Length] = (Item)weaponSlots [i];
-		}
-	}
+	public bool Equip (Item item) {
+		int slotRef = GetSlotFromEnum (item);
 
-	public void Equip (Armor armor) {
-		int slotRef = GetSlotFromEnum (armor);
-		if (slotRef != -1) {
-			if (slotRef == leftFingerRef) {
-				if (armorSlots [leftFingerRef] == null) {
-					armorSlots [leftFingerRef] = armor;
-					onEquipmentChangeCallback ();
-				} else if (armorSlots [rightFingerRef] == null) {
-					armorSlots [rightFingerRef] = armor;
-					onEquipmentChangeCallback ();
-				} else {
-					if (UnequipArmor (leftFingerRef)) {
-						armorSlots [leftFingerRef] = armor;
-						onEquipmentChangeCallback ();
-					}
-				}
-			} else {
-				if (armorSlots [slotRef] == null) {
-					armorSlots [slotRef] = armor;
-					onEquipmentChangeCallback ();
-				} else {
-					if (UnequipArmor (slotRef)) {
-						armorSlots [slotRef] = armor;
-						onEquipmentChangeCallback ();
-					}
-				}
-			}
-		}
-	}
-
-	public void Equip (Weapon weapon) {
-		int slotRef = GetSlotFromEnum (weapon);
-		if (slotRef != -1) {
-			if (weaponSlots [slotRef] == null) {
-				weaponSlots [slotRef] = weapon;
-				onEquipmentChangeCallback ();
-			} else {
-				if (UnequipWeapon (slotRef)) {
-					weaponSlots [slotRef] = weapon;
-					onEquipmentChangeCallback ();
-				}
-			}
-		}
-	}
-
-	public bool UnequipArmor (int slot) {
-		if (armorSlots [slot] != null) {
-			if (inventory.Add ((Item)armorSlots [slot])) {
-				armorSlots [slot] = null;
+		if (slotRef == -1)
+			return false;
+		
+		if (slotRef == leftFingerRef) {
+			if (equippedItems [leftFingerRef] == null) {
+				equippedItems [leftFingerRef] = item;
 				onEquipmentChangeCallback ();
 				return true;
 			}
+			
+			if (equippedItems [rightFingerRef] == null) {
+				equippedItems [rightFingerRef] = item;
+				onEquipmentChangeCallback ();
+				return true;
+			}
+			
+			if (Unequip (leftFingerRef)) {
+				equippedItems [leftFingerRef] = item;
+				onEquipmentChangeCallback ();
+				return true;
+			}
+
+			return false;
 		}
+		
+		if (equippedItems [slotRef] == null) {
+			equippedItems [slotRef] = item;
+			onEquipmentChangeCallback ();
+			return true;
+		}
+
+		if (Unequip (slotRef)) {
+			equippedItems [slotRef] = item;
+			onEquipmentChangeCallback ();
+			return true;
+		}
+
 		return false;
 	}
 
-	public bool UnequipWeapon (int slot) {
-		if (weaponSlots [slot] != null) {
-			if (inventory.Add ((Item)weaponSlots [slot])) {
-				weaponSlots [slot] = null;
-				onEquipmentChangeCallback ();
-				return true;
-			}
+	public bool Unequip (int slot) {
+		if (equippedItems [slot] == null)
+			return false;
+
+		if (inventory.Add (equippedItems [slot])) {
+			equippedItems [slot] = null;
+			onEquipmentChangeCallback ();
+			return true;
 		}
+
 		return false;
 	}
 
@@ -135,74 +111,77 @@ public class Equipped : MonoBehaviour {
 		int flatDEX = 0;
 		float magicalResist = 0f;
 
-		foreach (Armor armor in armorSlots) {
-			if (armor != null) {
-				armorValue += armor.armorValue;
-				damageModifier += armor.damageModifier;
-				healthFlat += armor.healthFlat;
-				healthModifier += armor.healthModifier;
-				manaFlat += armor.manaFlat;
-				manaModifier += armor.manaModifier;
-				flatSTR += armor.flatSTR;
-				flatCON += armor.flatCON;
-				flatINT += armor.flatINT;
-				flatWIS += armor.flatWIS;
-				flatDEX += armor.flatDEX;
-				magicalResist += armor.magicalResist;
-			}
-		}
+		foreach (Item item in equippedItems) {
+			if (item == null)
+				continue;
+			
+			Equipment equipment = (Equipment)item;
 
-		foreach (Weapon weapon in weaponSlots) {
-			if (weapon != null) {
-				armorValue += weapon.armorValue;
-				damageModifier += weapon.damageModifier;
-				healthFlat += weapon.healthFlat;
-				healthModifier += weapon.healthModifier;
-				manaFlat += weapon.manaFlat;
-				manaModifier += weapon.manaModifier;
-				flatSTR += weapon.flatSTR;
-				flatCON += weapon.flatCON;
-				flatINT += weapon.flatINT;
-				flatWIS += weapon.flatWIS;
-				flatDEX += weapon.flatDEX;
-				magicalResist += weapon.magicalResist;
-			}
+			armorValue += equipment.armorValue;
+			damageModifier += equipment.damageModifier;
+			healthFlat += equipment.healthFlat;
+			healthModifier += equipment.healthModifier;
+			manaFlat += equipment.manaFlat;
+			manaModifier += equipment.manaModifier;
+			flatSTR += equipment.flatSTR;
+			flatCON += equipment.flatCON;
+			flatINT += equipment.flatINT;
+			flatWIS += equipment.flatWIS;
+			flatDEX += equipment.flatDEX;
+			magicalResist += equipment.magicalResist;
 		}
 
 		stats.UpdateStats (armorValue, damageModifier, healthFlat, healthModifier, manaFlat, manaModifier, flatSTR, flatCON, flatINT, flatWIS, flatDEX, magicalResist);
 	}
 
-	int GetSlotFromEnum (Armor armor) {
-		if (armor.armorSlot == ArmorSlot.Head)
-			return headRef;
-		if (armor.armorSlot == ArmorSlot.Chest)
-			return chestRef;
-		if (armor.armorSlot == ArmorSlot.Legs)
-			return legsRef;
-		if (armor.armorSlot == ArmorSlot.Hands)
-			return handsRef;
-		if (armor.armorSlot == ArmorSlot.Feet)
-			return feetRef;
-		if (armor.armorSlot == ArmorSlot.Wrists)
-			return wristsRef;
-		if (armor.armorSlot == ArmorSlot.Ears)
-			return earsRef;
-		if (armor.armorSlot == ArmorSlot.Neck)
-			return neckRef;
-		if (armor.armorSlot == ArmorSlot.Fingers)
-			return leftFingerRef;
-		if (armor.armorSlot == ArmorSlot.Waist)
-			return waistRef;
-		return -1;
-	}
+	int GetSlotFromEnum (Item item) {
+		Equipment equipment;
+		Armor armor;
+		Weapon weapon;
 
-	int GetSlotFromEnum (Weapon weapon) {
-		if (weapon.weaponSlot == WeaponSlot.MainHand)
-			return mainHandRef;
-		if (weapon.weaponSlot == WeaponSlot.OffHand)
-			return offHandRef;
-		if (weapon.weaponSlot == WeaponSlot.Ranged)
-			return rangedRef;
+		if (item.itemType != ItemType.Equipment) {
+			Debug.Log ("Trying to equip an item that is not equipment.");
+			return -1;
+		}
+
+		equipment = (Equipment)item;
+
+		if (equipment.equipmentType == EquipmentType.Armor) {
+			armor = (Armor)equipment;
+			if (armor.armorSlot == ArmorSlot.Head)
+				return headRef;
+			if (armor.armorSlot == ArmorSlot.Chest)
+				return chestRef;
+			if (armor.armorSlot == ArmorSlot.Legs)
+				return legsRef;
+			if (armor.armorSlot == ArmorSlot.Hands)
+				return handsRef;
+			if (armor.armorSlot == ArmorSlot.Feet)
+				return feetRef;
+			if (armor.armorSlot == ArmorSlot.Wrists)
+				return wristsRef;
+			if (armor.armorSlot == ArmorSlot.Ears)
+				return earsRef;
+			if (armor.armorSlot == ArmorSlot.Neck)
+				return neckRef;
+			if (armor.armorSlot == ArmorSlot.Fingers)
+				return leftFingerRef;
+			if (armor.armorSlot == ArmorSlot.Waist)
+				return waistRef;
+			return -1;
+		}
+
+		if (equipment.equipmentType == EquipmentType.Weapon) {
+			weapon = (Weapon)equipment;
+			if (weapon.weaponSlot == WeaponSlot.MainHand)
+				return mainHandRef;
+			if (weapon.weaponSlot == WeaponSlot.OffHand)
+				return offHandRef;
+			if (weapon.weaponSlot == WeaponSlot.Ranged)
+				return rangedRef;
+			return -1;
+		}
+
 		return -1;
 	}
 }
