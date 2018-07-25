@@ -56,6 +56,7 @@ public class UI_Bag : MonoBehaviour {
 	void InitializeBagUI () {
 		SetBagDimensions ();
 		PopulateSlots ();
+		UpdateSlots ();
 
 		if (bagWindow.activeInHierarchy)
 			bagWindow.SetActive (false);

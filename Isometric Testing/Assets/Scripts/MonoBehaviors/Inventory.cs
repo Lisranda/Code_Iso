@@ -10,17 +10,22 @@ public class Inventory : MonoBehaviour {
 
 	void Awake () {
 		equipped = GetComponentInParent<Equipped> ();
+		InitializeInventory ();
 	}
 
 	void Start () {
-		for (int i = 0; i < inventorySize; i++) {
-			items.Add (null);
-		}
+		
 	}
 
 	void Update () {
 		DetectInput ();
-//		AutoEquipDebug ();
+		AutoEquipDebug ();
+	}
+
+	void InitializeInventory () {
+		for (int i = 0; i < inventorySize; i++) {
+			items.Add (null);
+		}
 	}
 
 	void AutoEquipDebug () {

@@ -8,19 +8,21 @@ public class Equipped : MonoBehaviour {
 	CreatureStats stats;
 	Inventory inventory;
 
+	public Item [] equippedItems = new Item [14];
+
 	[Header("Armor Slots")]
 	[SerializeField] Armor[] armorSlots = new Armor[11];
 	int headRef = 0;
 	int chestRef = 1;
-	int legsRef = 2;
-	int handsRef = 3;
+	int handsRef = 2;
+	int legsRef = 3;
 	int feetRef = 4;
-	int wristsRef = 5;
+	int waistRef = 5;
 	int earsRef = 6;
 	int neckRef = 7;
-	int leftFingerRef = 8;
-	int rightFingerRef = 9;
-	int waistRef = 10;
+	int wristsRef = 8;
+	int leftFingerRef = 9;
+	int rightFingerRef = 10;
 
 	[Header("Weapon Slots")]
 	[SerializeField] Weapon[] weaponSlots = new Weapon[3];
@@ -35,10 +37,21 @@ public class Equipped : MonoBehaviour {
 		inventory = GetComponentInParent<Inventory> ();
 		stats = GetComponentInParent<CreatureStats> ();
 		onEquipmentChangeCallback += CalculateEquipmentBonuses;
+		onEquipmentChangeCallback += UpdateItemsArray;
 	}
 
 	void Start () {
 		CalculateEquipmentBonuses ();
+		UpdateItemsArray ();
+	}
+
+	void UpdateItemsArray () {
+		for (int i = 0; i < armorSlots.Length; i++) {
+			equippedItems [i] = (Item)armorSlots [i];
+		}
+		for (int i = 0; i < weaponSlots.Length; i++) {
+			equippedItems [i + armorSlots.Length] = (Item)weaponSlots [i];
+		}
 	}
 
 	public void Equip (Armor armor) {
