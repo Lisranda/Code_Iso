@@ -16,4 +16,9 @@ public class Item : ScriptableObject {
 	public int itemValue = 0;
 	public int itemStackSize = 1;
 	public ItemType itemType;
+
+	public virtual bool UseItem (GameObject playerUsing) {
+		Debug.Log ("Using Item: " + itemName);
+		return true;
+	}
 }

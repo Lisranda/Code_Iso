@@ -49,7 +49,9 @@ public class UI_Bag : MonoBehaviour {
 		Debug.Log ("Making " + numberOfSlots + " slots.");
 
 		for (int i = 0; i < numberOfSlots; i++) {
-			bagSlots.Add (Instantiate (bagSlotPrefab, bagWindow.transform));
+			GameObject slot = Instantiate (bagSlotPrefab, bagWindow.transform);
+			slot.GetComponent<UI_Bag_Slot> ().SetSlotID (i);
+			bagSlots.Add (slot);
 		}
 	}
 

@@ -10,7 +10,6 @@ public class Equipped : MonoBehaviour {
 
 	public Item [] equippedItems = new Item [14];
 
-	[Header("Armor Slots")]
 	int headRef = 0;
 	int chestRef = 1;
 	int handsRef = 2;
@@ -23,7 +22,6 @@ public class Equipped : MonoBehaviour {
 	int leftFingerRef = 9;
 	int rightFingerRef = 10;
 
-	[Header("Weapon Slots")]
 	int mainHandRef = 11;
 	int offHandRef = 12;
 	int rangedRef = 13;

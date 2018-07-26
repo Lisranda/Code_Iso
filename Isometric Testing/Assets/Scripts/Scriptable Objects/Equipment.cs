@@ -26,4 +26,14 @@ public class Equipment : Item {
 	[Header("")]
 	public float magicalResist = 0f;
 
+	public override bool UseItem (GameObject playerUsing) {
+		Inventory inventory = playerUsing.GetComponent<Inventory> ();
+		Equipped equipped = playerUsing.GetComponent<Equipped> ();
+		if (equipped.Equip ((Item)this)) {
+			inventory.Remove ((Item)this);
+			return true;
+		}
+		return false;
+	}
+
 }

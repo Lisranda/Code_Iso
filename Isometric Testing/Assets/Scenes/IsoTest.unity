@@ -13900,9 +13900,75 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1846256442626734, guid: 1439ba3e4ecae514684d529ca29b366a, type: 2}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 114569828510949742, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114333586948902684, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114224018527222228, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114121236665996206, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114227986365238498, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114202819809222094, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114463868837915528, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114354107193098556, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114759651812048958, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114423708153597636, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114964216000266122, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114126129666277466, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114633612550393854, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114877811825014298, guid: 1439ba3e4ecae514684d529ca29b366a,
+        type: 2}
+      propertyPath: mouseOverColor.a
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1439ba3e4ecae514684d529ca29b366a, type: 2}

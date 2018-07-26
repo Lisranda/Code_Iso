@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_Bag_Slot : MonoBehaviour {
+public class UI_Character_Slot : MonoBehaviour {
 	GameObject player;
-	Inventory inventory;
+//	Inventory inventory;
+	Equipped equipped;
 
 	public GameObject iconObject;
 	public GameObject background;
 	public Color defaultColor;
 	public Color mouseOverColor;
-	int slotID;
+	public int slotID;
 
 	void Awake () {
 		player = transform.root.gameObject;
-		inventory = player.GetComponent<Inventory> ();
+//		inventory = player.GetComponent<Inventory> ();
+		equipped = player.GetComponent<Equipped> ();
 	}
 
 	public void SetSlotID (int newID) {
@@ -23,16 +25,16 @@ public class UI_Bag_Slot : MonoBehaviour {
 	}
 
 	public void RightClick () {
-		if (inventory.items [slotID] == null)
+		if (equipped.equippedItems [slotID] == null)
 			return;
-
-		if (inventory.items [slotID].UseItem (player)) {
+		
+		if (equipped.Unequip (slotID)) {
 			background.GetComponent<Image> ().color = defaultColor;
 		}
 	}
 
 	public void OnMouseEnter () {
-		if (inventory.items [slotID] == null)
+		if (equipped.equippedItems [slotID] == null)
 			return;
 		background.GetComponent<Image> ().color = mouseOverColor;
 	}

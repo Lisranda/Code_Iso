@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : PawnController {
 
@@ -152,6 +153,9 @@ public class PlayerController : PawnController {
 	}
 
 	void MouseOver () {
+		if (EventSystem.current.IsPointerOverGameObject ())
+			return;
+
 		if (RayToTile () != null) {
 			RayToTile ().GetComponent<Tile> ().AddHighlight ();
 		}
@@ -164,6 +168,9 @@ public class PlayerController : PawnController {
 	}
 
 	void RightClick (){
+		if (EventSystem.current.IsPointerOverGameObject ())
+			return;
+		
 		if (Input.GetMouseButton (1)) {
 			if (RayToTile () != null) {
 				if (RayToTile ().GetComponent<Tile> ().isWalkable && !RayToTile ().GetComponent<Tile> ().isOccupied) {
