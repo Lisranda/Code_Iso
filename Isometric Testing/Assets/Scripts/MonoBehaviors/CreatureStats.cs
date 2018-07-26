@@ -66,11 +66,16 @@ public class CreatureStats : MonoBehaviour {
 	[SerializeField] protected float lightResist;
 	[SerializeField] protected float darkResist;
 
+	[Header("Storage")]
+	[SerializeField] protected int baseStorageSize;
+	[SerializeField] protected int bagSize;
+	[SerializeField] protected int currentStorageSize;
+
 	void Start () {
 		
 	}
 
-	public void UpdateStats (int armorVal, float damageMod, int hpFlat, float hpMod, int mpFlat, float mpMod, int flatSTR, int flatCON, int flatINT, int flatWIS, int flatDEX, float magicalRes) {
+	public void UpdateStats (int armorVal = 0, float damageMod = 0f, int hpFlat = 0, float hpMod = 0, int mpFlat = 0, float mpMod = 0f, int flatSTR = 0, int flatCON = 0, int flatINT = 0, int flatWIS = 0, int flatDEX = 0, float magicalRes = 0f, int bagSlots = 0) {
 		armorValue = armorVal;
 		damageModifier = damageMod;
 		healthBonusFlat = hpFlat;
@@ -83,6 +88,7 @@ public class CreatureStats : MonoBehaviour {
 		modWisdom = flatWIS;
 		modDexterity = flatDEX;
 		magicalResist = magicalRes;
+		bagSize = bagSlots;
 
 		healthMax = Mathf.RoundToInt ((healthBase + healthBonusFlat) * (1f + healthBonusModifier));
 		manaMax = Mathf.RoundToInt ((manaBase + manaBonusFlat) * (1f + manaBonusModifier));
@@ -92,6 +98,8 @@ public class CreatureStats : MonoBehaviour {
 		currentIntelligence = baseIntelligence + modIntelligence;
 		currentWisdom = baseWisdom + modWisdom;
 		currentDexterity = baseDexterity + modDexterity;
+
+		currentStorageSize = baseStorageSize + bagSize;
 	}
 
 	public int GetSpeedNormal () {
@@ -100,6 +108,10 @@ public class CreatureStats : MonoBehaviour {
 
 	public int GetSpeedSprint () {
 		return speedSprint;
+	}
+
+	public int GetCurrentStorageSize () {
+		return currentStorageSize;
 	}
 
 	public void ApplyDamage (float damageAmount, DamageTypes damageType) {

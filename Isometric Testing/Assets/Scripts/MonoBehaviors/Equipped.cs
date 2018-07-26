@@ -8,7 +8,8 @@ public class Equipped : MonoBehaviour {
 	CreatureStats stats;
 	Inventory inventory;
 
-	public Item [] equippedItems = new Item [14];
+	public int equipmentArraySize = 15;
+	public Item [] equippedItems;
 
 	int headRef = 0;
 	int chestRef = 1;
@@ -26,17 +27,19 @@ public class Equipped : MonoBehaviour {
 	int offHandRef = 12;
 	int rangedRef = 13;
 
+	int bagRef = 14;
+
 	public delegate void OneEquipmentChange ();
 	public OneEquipmentChange onEquipmentChangeCallback;
 
-	void Awake () {
+	void Awake () {		
 		inventory = GetComponentInParent<Inventory> ();
 		stats = GetComponentInParent<CreatureStats> ();
 		onEquipmentChangeCallback += CalculateEquipmentBonuses;
+		equippedItems = new Item [equipmentArraySize];
 	}
 
 	void Start () {
-		CalculateEquipmentBonuses ();
 	}		
 
 	public bool Equip (Item item) {
@@ -65,6 +68,22 @@ public class Equipped : MonoBehaviour {
 			}
 
 			return false;
+		}
+
+		if (slotRef == bagRef) {
+			if (equippedItems [bagRef] == null) {
+				equippedItems [bagRef] = item;
+				onEquipmentChangeCallback ();
+//				inventory.onInventorySizeChangeCallback ();
+				return true;
+			}
+
+			if (Unequip (bagRef)) {
+				equippedItems [bagRef] = item;
+				onEquipmentChangeCallback ();
+//				inventory.onInventorySizeChangeCallback ();
+				return true;
+			}
 		}
 		
 		if (equippedItems [slotRef] == null) {
@@ -95,7 +114,7 @@ public class Equipped : MonoBehaviour {
 		return false;
 	}
 
-	void CalculateEquipmentBonuses () {
+	public void CalculateEquipmentBonuses () {
 		int armorValue = 0;
 		float damageModifier = 0f;
 		int healthFlat = 0;
@@ -108,6 +127,7 @@ public class Equipped : MonoBehaviour {
 		int flatWIS = 0;
 		int flatDEX = 0;
 		float magicalResist = 0f;
+		int bagSize = 0;
 
 		foreach (Item item in equippedItems) {
 			if (item == null)
@@ -127,9 +147,10 @@ public class Equipped : MonoBehaviour {
 			flatWIS += equipment.flatWIS;
 			flatDEX += equipment.flatDEX;
 			magicalResist += equipment.magicalResist;
+			bagSize += equipment.bagSize;
 		}
 
-		stats.UpdateStats (armorValue, damageModifier, healthFlat, healthModifier, manaFlat, manaModifier, flatSTR, flatCON, flatINT, flatWIS, flatDEX, magicalResist);
+		stats.UpdateStats (armorValue, damageModifier, healthFlat, healthModifier, manaFlat, manaModifier, flatSTR, flatCON, flatINT, flatWIS, flatDEX, magicalResist, bagSize);
 	}
 
 	int GetSlotFromEnum (Item item) {
@@ -179,6 +200,9 @@ public class Equipped : MonoBehaviour {
 				return rangedRef;
 			return -1;
 		}
+
+		if (equipment.equipmentType == EquipmentType.Bag)
+			return bagRef;
 
 		return -1;
 	}

@@ -6,12 +6,17 @@ using UnityEngine.UI;
 public class UI_Character : MonoBehaviour {
 	Equipped equipped;
 
-	public GameObject characterWindow;
+	[SerializeField] GameObject characterWindow;
+	[SerializeField] GameObject leftSlots;
+	[SerializeField] GameObject rightSlots;
+	[SerializeField] GameObject weaponSlots;
+	[SerializeField] GameObject slotPrefab;
 
-	public GameObject [] equipmentSlots = new GameObject [14];
+	GameObject [] equipmentSlots;
 
-	void Awake () {
+	void Awake () {		
 		equipped = transform.root.gameObject.GetComponent<Equipped> ();
+		equipmentSlots = new GameObject [equipped.equipmentArraySize];
 	}
 
 	void Start () {
@@ -23,14 +28,33 @@ public class UI_Character : MonoBehaviour {
 		DetectInput ();
 	}
 
-	void InitializeCharacterSlots () {
+	void PopulateCharacterSlots () {
 		for (int i = 0; i < equipmentSlots.Length; i++) {
-			equipmentSlots [i].GetComponent<UI_Character_Slot> ().SetSlotID (i);
+			if (i < 6) {
+				GameObject slot = Instantiate (slotPrefab, leftSlots.transform);
+				slot.GetComponent<UI_Character_Slot> ().SetSlotID (i);
+				equipmentSlots [i] = slot;
+				continue;
+			}
+
+			if (i < 11) {
+				GameObject slot = Instantiate (slotPrefab, rightSlots.transform);
+				slot.GetComponent<UI_Character_Slot> ().SetSlotID (i);
+				equipmentSlots [i] = slot;
+				continue;
+			}
+
+			if (i > 10) {
+				GameObject slot = Instantiate (slotPrefab, weaponSlots.transform);
+				slot.GetComponent<UI_Character_Slot> ().SetSlotID (i);
+				equipmentSlots [i] = slot;
+				continue;
+			}
 		}
 	}
 
 	void InitializeCharacterUI () {
-		InitializeCharacterSlots ();
+		PopulateCharacterSlots ();
 		UpdateSlots ();
 
 		if (characterWindow.activeInHierarchy)

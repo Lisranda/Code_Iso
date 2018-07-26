@@ -9,13 +9,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8f21bdf93b05c4e42a8b0889b98d22a3, type: 3}
-  m_Name: New Bag
+  m_Name: Little Bag
   m_EditorClassIdentifier: 
-  itemName: New Bag
-  itemIcon: {fileID: 0}
+  itemName: Little Bag
+  itemIcon: {fileID: 21300000, guid: ae496f5dad56ea645b72d374a0376368, type: 3}
   itemValue: 0
+  itemStackSize: 1
   itemType: 0
   equipmentType: 2
   armorValue: 0
-  attackDamage: 0
-  bagCapacity: 0
+  damageModifier: 0
+  healthFlat: 0
+  healthModifier: 0
+  manaFlat: 0
+  manaModifier: 0
+  flatSTR: 0
+  flatCON: 0
+  flatINT: 0
+  flatWIS: 0
+  flatDEX: 0
+  magicalResist: 0
+  bagSize: 10

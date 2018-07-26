@@ -13,13 +13,11 @@ public class UI_Bag : MonoBehaviour {
 
 	[SerializeField] List<GameObject> bagSlots = new List<GameObject> ();
 
-	public delegate void OnChangedBag ();
-	public OnChangedBag onChangedBagCallback;
-
 	void Awake () {
 		inventory = transform.root.gameObject.GetComponent<Inventory> ();
-		onChangedBagCallback += SetBagDimensions;
-		onChangedBagCallback += PopulateSlots;
+		inventory.onInventorySizeChangeCallback += SetBagDimensions;
+		inventory.onInventorySizeChangeCallback += PopulateSlots;
+		inventory.onInventoryChangeCallback += UpdateSlots;
 	}
 
 	void Start () {
@@ -28,7 +26,6 @@ public class UI_Bag : MonoBehaviour {
 
 	void Update () {
 		DetectInput ();
-		UpdateSlots ();
 	}
 
 	void DetectInput () {

@@ -25,6 +25,8 @@ public class Equipment : Item {
 	public int flatDEX = 0;
 	[Header("")]
 	public float magicalResist = 0f;
+	[Header("")]
+	public int bagSize = 0;
 
 	public override bool UseItem (GameObject playerUsing) {
 		Inventory inventory = playerUsing.GetComponent<Inventory> ();

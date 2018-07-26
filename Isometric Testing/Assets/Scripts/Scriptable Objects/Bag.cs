@@ -8,7 +8,4 @@ public class Bag : Equipment {
 		itemName = "New Bag";
 		equipmentType = EquipmentType.Bag;
 	}
-
-	[Header("Bag Settings")]
-	public int bagCapacity = 0;
 }
