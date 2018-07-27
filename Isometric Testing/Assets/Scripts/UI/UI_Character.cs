@@ -20,7 +20,6 @@ public class UI_Character : MonoBehaviour {
 	}
 
 	void Start () {
-		equipped.onEquipmentChangeCallback += UpdateSlots;
 		InitializeCharacterUI ();
 	}
 
@@ -73,7 +72,7 @@ public class UI_Character : MonoBehaviour {
 			characterWindow.SetActive (true);
 	}
 
-	void UpdateSlots () {
+	public void UpdateSlots () {
 		for (int i = 0; i < equipmentSlots.Length; i++) {			
 			if (equipped.equippedItems [i] == null) {
 				equipmentSlots [i].GetComponent<UI_Character_Slot> ().iconObject.GetComponent<Image> ().sprite = null;

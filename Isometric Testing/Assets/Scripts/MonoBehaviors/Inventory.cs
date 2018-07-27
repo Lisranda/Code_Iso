@@ -5,23 +5,19 @@ using UnityEngine;
 public class Inventory : MonoBehaviour {
 	Equipped equipped;
 	CreatureStats stats;
+	PawnInitializer pawnInitializer;
+
 	public List<Item> items = new List<Item>();
 
 	public int inventorySize;
 
-	public delegate void OnInventoryChange ();
-	public OnInventoryChange onInventoryChangeCallback;
-
-	public delegate void OnInventorySizeChange ();
-	public OnInventorySizeChange onInventorySizeChangeCallback;
-
 	void Awake () {
 		equipped = GetComponentInParent<Equipped> ();
 		stats = GetComponentInParent<CreatureStats> ();
+		pawnInitializer = GetComponentInParent<PawnInitializer> ();
 	}
 
 	void Start () {
-		onInventorySizeChangeCallback += ChangeInventorySize;
 	}
 
 	void Update () {
@@ -36,7 +32,7 @@ public class Inventory : MonoBehaviour {
 		}
 	}
 
-	void ChangeInventorySize () {
+	public void ChangeInventorySize () {
 		int oldCount = items.Count;
 		inventorySize = stats.GetCurrentStorageSize ();
 
@@ -58,22 +54,20 @@ public class Inventory : MonoBehaviour {
 					if (items [o] != null) {
 						if (o == inventorySize - 1) {
 							Debug.Log ("Inventory Full, Dropping: " + items [i].itemName);
-							Remove (items [i]);
+							Remove (i);
 						}
 						continue;
 					}
-
 					items [o] = items [i];
+					Remove (i);
 					break;
 				}
 			}
 
-			for (int i = inventorySize; i < oldCount; i++) {
+			for (int i = inventorySize; i < oldCount; oldCount--) {
 				items.Remove (items [i]);
 			}
 		}
-
-		onInventoryChangeCallback ();
 	}
 
 	void AutoEquipDebug () {
@@ -103,14 +97,19 @@ public class Inventory : MonoBehaviour {
 			items [i] = item;
 			break;
 		}
-		onInventoryChangeCallback ();
+		pawnInitializer.onInventoryChangeCallback ();
 		return true;
 	}
 
 	public void Remove (Item item) {
 		int index = (items.IndexOf (item));
 		items [index] = null;
-		onInventoryChangeCallback ();
+		pawnInitializer.onInventoryChangeCallback ();
+	}
+
+	public void Remove (int inventoryIndex) {
+		items [inventoryIndex] = null;
+		pawnInitializer.onInventoryChangeCallback ();
 	}
 
 	void DetectInput () {

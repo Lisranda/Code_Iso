@@ -27,12 +27,13 @@ public class Equipment : Item {
 	public float magicalResist = 0f;
 	[Header("")]
 	public int bagSize = 0;
+	[Header("")]
+	public int weaponDamage = 0;
 
-	public override bool UseItem (GameObject playerUsing) {
-		Inventory inventory = playerUsing.GetComponent<Inventory> ();
+	public override bool UseItem (GameObject playerUsing, int inventoryIndex = -1) {
+//		Inventory inventory = playerUsing.GetComponent<Inventory> ();
 		Equipped equipped = playerUsing.GetComponent<Equipped> ();
-		if (equipped.Equip ((Item)this)) {
-			inventory.Remove ((Item)this);
+		if (equipped.Equip ((Item)this, inventoryIndex)) {
 			return true;
 		}
 		return false;

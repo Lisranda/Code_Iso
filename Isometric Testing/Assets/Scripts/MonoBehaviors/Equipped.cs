@@ -7,6 +7,7 @@ using UnityEngine;
 public class Equipped : MonoBehaviour {
 	CreatureStats stats;
 	Inventory inventory;
+	PawnInitializer pawnInitializer;
 
 	public int equipmentArraySize = 15;
 	public Item [] equippedItems;
@@ -29,41 +30,41 @@ public class Equipped : MonoBehaviour {
 
 	int bagRef = 14;
 
-	public delegate void OneEquipmentChange ();
-	public OneEquipmentChange onEquipmentChangeCallback;
-
 	void Awake () {		
 		inventory = GetComponentInParent<Inventory> ();
 		stats = GetComponentInParent<CreatureStats> ();
-		onEquipmentChangeCallback += CalculateEquipmentBonuses;
+		pawnInitializer = GetComponentInParent<PawnInitializer> ();
 		equippedItems = new Item [equipmentArraySize];
 	}
 
 	void Start () {
 	}		
 
-	public bool Equip (Item item) {
+	public bool Equip (Item item, int inventoryIndex = -1) {
 		int slotRef = GetSlotFromEnum (item);
 
 		if (slotRef == -1)
+			return false;
+
+		if (inventoryIndex == -1)
 			return false;
 		
 		if (slotRef == leftFingerRef) {
 			if (equippedItems [leftFingerRef] == null) {
 				equippedItems [leftFingerRef] = item;
-				onEquipmentChangeCallback ();
+				inventory.Remove (inventoryIndex);
+				pawnInitializer.onEquipmentChangeCallback ();
 				return true;
 			}
 			
 			if (equippedItems [rightFingerRef] == null) {
 				equippedItems [rightFingerRef] = item;
-				onEquipmentChangeCallback ();
+				inventory.Remove (inventoryIndex);
+				pawnInitializer.onEquipmentChangeCallback ();
 				return true;
 			}
 			
-			if (Unequip (leftFingerRef)) {
-				equippedItems [leftFingerRef] = item;
-				onEquipmentChangeCallback ();
+			if (Swap (leftFingerRef, item, inventoryIndex)) {
 				return true;
 			}
 
@@ -73,32 +74,50 @@ public class Equipped : MonoBehaviour {
 		if (slotRef == bagRef) {
 			if (equippedItems [bagRef] == null) {
 				equippedItems [bagRef] = item;
-				onEquipmentChangeCallback ();
-//				inventory.onInventorySizeChangeCallback ();
+				inventory.Remove (inventoryIndex);
+				pawnInitializer.onEquipmentChangeCallback ();
+				pawnInitializer.onInventorySizeChangeCallback ();
 				return true;
 			}
 
-			if (Unequip (bagRef)) {
-				equippedItems [bagRef] = item;
-				onEquipmentChangeCallback ();
-//				inventory.onInventorySizeChangeCallback ();
+			if (Swap (bagRef, item, inventoryIndex)) {
+				pawnInitializer.onInventorySizeChangeCallback ();
 				return true;
 			}
+
+			return false;
 		}
 		
 		if (equippedItems [slotRef] == null) {
 			equippedItems [slotRef] = item;
-			onEquipmentChangeCallback ();
+			inventory.Remove (inventoryIndex);
+			pawnInitializer.onEquipmentChangeCallback ();
 			return true;
 		}
 
-		if (Unequip (slotRef)) {
-			equippedItems [slotRef] = item;
-			onEquipmentChangeCallback ();
+		if (Swap (slotRef, item, inventoryIndex)) {
 			return true;
 		}
 
 		return false;
+	}
+
+	public bool Swap (int slot, Item newItem, int inventoryIndex = -1) {
+		if (equippedItems [slot] == null)
+			return false;
+
+		if (newItem.itemType != ItemType.Equipment)
+			return false;
+
+		if (inventoryIndex == -1)
+			return false;
+
+		Item swapItem = equippedItems [slot];
+		equippedItems [slot] = newItem;
+		inventory.Remove (inventoryIndex);
+		inventory.Add (swapItem);
+		pawnInitializer.onEquipmentChangeCallback ();
+		return true;
 	}
 
 	public bool Unequip (int slot) {
@@ -107,7 +126,11 @@ public class Equipped : MonoBehaviour {
 
 		if (inventory.Add (equippedItems [slot])) {
 			equippedItems [slot] = null;
-			onEquipmentChangeCallback ();
+			pawnInitializer.onEquipmentChangeCallback ();
+
+			if (slot == bagRef)
+				pawnInitializer.onInventorySizeChangeCallback ();
+
 			return true;
 		}
 
@@ -128,6 +151,7 @@ public class Equipped : MonoBehaviour {
 		int flatDEX = 0;
 		float magicalResist = 0f;
 		int bagSize = 0;
+		int weaponDamage = 0;
 
 		foreach (Item item in equippedItems) {
 			if (item == null)
@@ -148,9 +172,10 @@ public class Equipped : MonoBehaviour {
 			flatDEX += equipment.flatDEX;
 			magicalResist += equipment.magicalResist;
 			bagSize += equipment.bagSize;
+			weaponDamage += equipment.weaponDamage;
 		}
 
-		stats.UpdateStats (armorValue, damageModifier, healthFlat, healthModifier, manaFlat, manaModifier, flatSTR, flatCON, flatINT, flatWIS, flatDEX, magicalResist, bagSize);
+		stats.UpdateStats (armorValue, damageModifier, healthFlat, healthModifier, manaFlat, manaModifier, flatSTR, flatCON, flatINT, flatWIS, flatDEX, magicalResist, bagSize, weaponDamage);
 	}
 
 	int GetSlotFromEnum (Item item) {

@@ -5348,6 +5348,9 @@ MonoBehaviour:
   speedModifier: 0
   armorValue: 0
   damageModifier: 0
+  weaponDamageBase: 1
+  weaponDamageBonusFlat: 0
+  currentWeaponDamage: 0
   healthBase: 100
   healthBonusFlat: 0
   healthBonusModifier: 0
@@ -5593,6 +5596,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45d3185b3fc007b4d9fb853ea921b287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiBag: {fileID: 114565756385930434}
+  uiCharacter: {fileID: 114256834278200138}
 --- !u!114 &114674420840906020
 MonoBehaviour:
   m_ObjectHideFlags: 1

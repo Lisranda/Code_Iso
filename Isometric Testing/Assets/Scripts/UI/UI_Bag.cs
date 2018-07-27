@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class UI_Bag : MonoBehaviour {
 	Inventory inventory;
+	PawnInitializer pawnInitializer;
 
 	[SerializeField] GameObject bagWindow;
 	[SerializeField] GameObject bagSlotPrefab;
@@ -15,9 +16,7 @@ public class UI_Bag : MonoBehaviour {
 
 	void Awake () {
 		inventory = transform.root.gameObject.GetComponent<Inventory> ();
-		inventory.onInventorySizeChangeCallback += SetBagDimensions;
-		inventory.onInventorySizeChangeCallback += PopulateSlots;
-		inventory.onInventoryChangeCallback += UpdateSlots;
+		pawnInitializer = transform.root.gameObject.GetComponent<PawnInitializer> ();
 	}
 
 	void Start () {
@@ -40,16 +39,21 @@ public class UI_Bag : MonoBehaviour {
 			bagWindow.SetActive (true);
 	}
 
-	void PopulateSlots () {
+	public void PopulateSlots () {
+		foreach (GameObject slot in bagSlots) {
+			GameObject.Destroy (slot);
+		}
+
 		bagSlots.Clear ();
 		int numberOfSlots = inventory.inventorySize;
-		Debug.Log ("Making " + numberOfSlots + " slots.");
 
 		for (int i = 0; i < numberOfSlots; i++) {
 			GameObject slot = Instantiate (bagSlotPrefab, bagWindow.transform);
 			slot.GetComponent<UI_Bag_Slot> ().SetSlotID (i);
 			bagSlots.Add (slot);
 		}
+
+		pawnInitializer.onInventoryChangeCallback ();
 	}
 
 	void InitializeBagUI () {
@@ -61,7 +65,7 @@ public class UI_Bag : MonoBehaviour {
 			bagWindow.SetActive (false);
 	}
 
-	void SetBagDimensions () {
+	public void SetBagDimensions () {
 		GridLayoutGroup gridLayoutGroup = bagWindow.GetComponent<GridLayoutGroup> ();
 
 		float bagSlotHeight = gridLayoutGroup.cellSize.y;
@@ -87,7 +91,7 @@ public class UI_Bag : MonoBehaviour {
 		bagWindowRectTransform.sizeDelta = bagSizeVector2;
 	}
 
-	void UpdateSlots () {
+	public void UpdateSlots () {
 		for (int i = 0; i < inventory.items.Count; i++) {
 			if (inventory.items [i] == null) {
 				bagSlots [i].GetComponent<UI_Bag_Slot> ().iconObject.GetComponent<Image> ().sprite = null;

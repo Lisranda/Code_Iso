@@ -17,6 +17,9 @@ public class CreatureStats : MonoBehaviour {
 	[Header("Combat")]
 	[SerializeField] protected int armorValue;
 	[SerializeField] protected float damageModifier;
+	[SerializeField] protected int weaponDamageBase;
+	[SerializeField] protected int weaponDamageBonusFlat;
+	[SerializeField] protected int currentWeaponDamage;
 
 	[Header("Health")]
 	[SerializeField] protected int healthBase;
@@ -75,7 +78,7 @@ public class CreatureStats : MonoBehaviour {
 		
 	}
 
-	public void UpdateStats (int armorVal = 0, float damageMod = 0f, int hpFlat = 0, float hpMod = 0, int mpFlat = 0, float mpMod = 0f, int flatSTR = 0, int flatCON = 0, int flatINT = 0, int flatWIS = 0, int flatDEX = 0, float magicalRes = 0f, int bagSlots = 0) {
+	public void UpdateStats (int armorVal = 0, float damageMod = 0f, int hpFlat = 0, float hpMod = 0, int mpFlat = 0, float mpMod = 0f, int flatSTR = 0, int flatCON = 0, int flatINT = 0, int flatWIS = 0, int flatDEX = 0, float magicalRes = 0f, int bagSlots = 0, int weapDamage = 0) {
 		armorValue = armorVal;
 		damageModifier = damageMod;
 		healthBonusFlat = hpFlat;
@@ -89,6 +92,7 @@ public class CreatureStats : MonoBehaviour {
 		modDexterity = flatDEX;
 		magicalResist = magicalRes;
 		bagSize = bagSlots;
+		weaponDamageBonusFlat = weapDamage;
 
 		healthMax = Mathf.RoundToInt ((healthBase + healthBonusFlat) * (1f + healthBonusModifier));
 		manaMax = Mathf.RoundToInt ((manaBase + manaBonusFlat) * (1f + manaBonusModifier));
@@ -100,6 +104,8 @@ public class CreatureStats : MonoBehaviour {
 		currentDexterity = baseDexterity + modDexterity;
 
 		currentStorageSize = baseStorageSize + bagSize;
+
+		currentWeaponDamage = Mathf.RoundToInt ((weaponDamageBase + weaponDamageBonusFlat) * (1f + damageModifier));
 	}
 
 	public int GetSpeedNormal () {

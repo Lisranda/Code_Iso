@@ -11,5 +11,4 @@ public class Weapon : Equipment {
 
 	[Header("Weapon Settings")]
 	public WeaponSlot weaponSlot;
-	public int weaponDamage = 0;
 }
