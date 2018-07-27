@@ -9,6 +9,8 @@ public class Inventory : MonoBehaviour {
 
 	public List<Item> items = new List<Item>();
 
+	[SerializeField] GameObject itemPrefab;
+
 	public int inventorySize;
 
 	void Awake () {
@@ -54,7 +56,7 @@ public class Inventory : MonoBehaviour {
 					if (items [o] != null) {
 						if (o == inventorySize - 1) {
 							Debug.Log ("Inventory Full, Dropping: " + items [i].itemName);
-							Remove (i);
+							Drop (i);
 						}
 						continue;
 					}
@@ -115,6 +117,17 @@ public class Inventory : MonoBehaviour {
 	void DetectInput () {
 		if (Input.GetKeyDown ("e"))
 			Pickup ();
+	}
+
+	public void Drop (Item item) {
+	}
+
+	public void Drop (int inventoryIndex) {
+		Vector3 location = GetComponentInParent<PawnController> ().GetTileLocation ();
+		GameObject newItem = Instantiate (itemPrefab, location, Quaternion.identity);
+		newItem.GetComponent<ItemInteraction> ().item = items [inventoryIndex];
+		newItem.name = items [inventoryIndex].itemName;
+		Remove (inventoryIndex);
 	}
 
 	void Pickup () {

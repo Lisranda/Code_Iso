@@ -116,6 +116,10 @@ public class PawnController : MonoBehaviour {
 		return null;
 	}
 
+	public Vector3 GetTileLocation () {
+		return tileLocation.transform.position;
+	}
+
 	#endregion
 
 	#region MOVEMENT HELPERS
