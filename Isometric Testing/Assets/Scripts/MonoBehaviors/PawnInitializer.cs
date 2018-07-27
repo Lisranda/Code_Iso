@@ -20,6 +20,8 @@ public class PawnInitializer : MonoBehaviour {
 	void Awake () {
 		inventory = gameObject.GetComponentInParent<Inventory> ();
 		equipped = gameObject.GetComponentInParent<Equipped> ();
+
+
 	}
 
 	void Start () {
@@ -34,5 +36,6 @@ public class PawnInitializer : MonoBehaviour {
 
 		equipped.CalculateEquipmentBonuses ();
 		inventory.InitializeInventory ();
+		uiBag.InitializeBagUI ();
 	}
 }

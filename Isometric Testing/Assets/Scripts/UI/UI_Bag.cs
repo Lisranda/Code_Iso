@@ -20,7 +20,6 @@ public class UI_Bag : MonoBehaviour {
 	}
 
 	void Start () {
-		InitializeBagUI ();
 	}
 
 	void Update () {
@@ -56,10 +55,9 @@ public class UI_Bag : MonoBehaviour {
 		pawnInitializer.onInventoryChangeCallback ();
 	}
 
-	void InitializeBagUI () {
+	public void InitializeBagUI () {
 		SetBagDimensions ();
 		PopulateSlots ();
-		UpdateSlots ();
 
 		if (bagWindow.activeInHierarchy)
 			bagWindow.SetActive (false);

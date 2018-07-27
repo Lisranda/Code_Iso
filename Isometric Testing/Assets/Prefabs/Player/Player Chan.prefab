@@ -1878,12 +1878,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4062838796171378}
   - component: {fileID: 95067586089195486}
+  - component: {fileID: 114613046848760622}
   - component: {fileID: 114546970763427192}
   - component: {fileID: 114875844201473550}
   - component: {fileID: 114700190738626484}
   - component: {fileID: 114012694034800878}
   - component: {fileID: 65987280670206082}
-  - component: {fileID: 114613046848760622}
   m_Layer: 8
   m_Name: Player Chan
   m_TagString: Player
@@ -5685,6 +5685,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   items: []
+  itemPrefab: {fileID: 1147474789213200, guid: ae32e4da61953804d9e55a6012e51512, type: 2}
   inventorySize: 25
 --- !u!114 &114939713308192796
 MonoBehaviour:

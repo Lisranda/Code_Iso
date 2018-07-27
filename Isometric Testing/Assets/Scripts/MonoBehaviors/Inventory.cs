@@ -67,7 +67,7 @@ public class Inventory : MonoBehaviour {
 			}
 
 			for (int i = inventorySize; i < oldCount; oldCount--) {
-				items.Remove (items [i]);
+				items.RemoveAt (i);
 			}
 		}
 	}

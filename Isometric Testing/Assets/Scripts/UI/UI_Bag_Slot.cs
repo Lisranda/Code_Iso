@@ -26,6 +26,11 @@ public class UI_Bag_Slot : MonoBehaviour {
 		if (inventory.items [slotID] == null)
 			return;
 
+		if (Input.GetKey ("left ctrl")) {
+			inventory.Drop (slotID);
+			return;
+		}
+
 		if (inventory.items [slotID].UseItem (player, slotID)) {
 			background.GetComponent<Image> ().color = defaultColor;
 		}
