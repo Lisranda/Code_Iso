@@ -103,6 +103,15 @@ public class Inventory : MonoBehaviour {
 		return true;
 	}
 
+	public bool Insert (Item item, int inventoryIndex){
+		if (items [inventoryIndex] != null)
+			return false;
+
+		items [inventoryIndex] = item;
+		pawnInitializer.onInventoryChangeCallback ();
+		return true;
+	}
+
 	public void Remove (Item item) {
 		int index = (items.IndexOf (item));
 		items [index] = null;
